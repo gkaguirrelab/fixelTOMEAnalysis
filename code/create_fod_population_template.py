@@ -52,8 +52,8 @@ def create_fod_population_template(qsirecon_list, path_to_mrtrix_bin, workdir, o
         for session in os.listdir(subject_folder):
             if 'ses' in session:
                 # Construct the image and mask names 
-                fod_name = subject_name+'_'+session+'_'+'space-T1w_desc-preproc_space-T1w_desc-wmFODmtnormed_msmtcsd.mif'
-                mask_name = subject_name+'_'+session+'_'+'space-T1w_desc-preproc_space-T1w_desc-mtinliermask_msmtcsd.nii'
+                fod_name = subject_name+'_'+session+'_'+'space-T1w_desc-preproc_space-T1w_desc-wmFODmtnormed_msmtcsd.mif.gz'
+                mask_name = subject_name+'_'+session+'_'+'space-T1w_desc-preproc_space-T1w_desc-mtinliermask_msmtcsd.nii.gz'
                 # Get the full paths to the image and the mask
                 image = os.path.join(subject_folder, session, 'dwi', fod_name)
                 mask = os.path.join(subject_folder, session, 'dwi', mask_name)  

@@ -1,6 +1,6 @@
 import os 
 
-def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, workdir, output_template_file):
+def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, workdir, voxel_size, output_template_file):
     
     '''
     This is a wrapper around MRtrix "population_template" function for a 
@@ -16,6 +16,7 @@ def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, work
         MRtrix functions from a terminal without specifying the direct path),
         you can leave this flag empty (path_to_mrtrix_bin = '')
         - workdir = This is the path where the folders will be organized.
+        - voxel_size = enter one number if isotropic. Otherwise, comma seperated
         - output_template_file = This is the final template file. Should have 
         the .mif extension         
     '''
@@ -33,12 +34,13 @@ def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, work
     num_images = len(fod_list)    
     for i in range(num_images):
         new_file_name = str(i + 1) + '.mif'
-        os.system('cp %s %s' % (fod_list[i], os.path.join(input_fods, new_file_name))
-        os.system('cp %s %s' % (mask_list[i], os.path.join(input_masks, new_file_name))
+        os.system('cp %s %s' % (fod_list[i], os.path.join(input_fods, new_file_name)))
+        os.system('cp %s %s' % (mask_list[i], os.path.join(input_masks, new_file_name)))
     
-    os.system('%s %s -mask_dir %s %s' % (os.path.join(path_to_mrtrix_bin, 'population_template'),
-                                         input_fods, input_masks, output_template_file))
-        
+    os.system('%s %s -mask_dir %s %s -voxel_size %s' % (os.path.join(path_to_mrtrix_bin, 'population_template'),
+                                                        input_fods, input_masks, output_template_file,
+                                                        voxel_size))
+    
     return (workdir, output_template_file)
         
     

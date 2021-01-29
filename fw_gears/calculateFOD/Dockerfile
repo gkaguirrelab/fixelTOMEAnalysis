@@ -8,10 +8,14 @@ MAINTAINER Ozzy(ozenctaskin@hotmail.com)
 ENV FLYWHEEL /flywheel/v0/
 RUN mkdir -p ${FLYWHEEL}
 COPY manifest.json run ${FLYWHEEL}
-COPY create_fod_population_template.py ${FLYWHEEL}/create_fod_population_template.py
+COPY create_fod_image.py ${FLYWHEEL}/create_fod_image.py
+COPY ConstraintSet.mat ${FLYWHEEL}/ConstraintSet.mat
+COPY sphere5120.obj ${FLYWHEEL}/sphere5120.obj
+COPY adaptConOpt /tmp/adaptConOpt
+
 RUN chmod +x /flywheel/v0/run
 RUN chmod +x /opt/func_input/*  
-RUN chmod +x ${FLYWHEEL}/create_fod_population_template.py
+RUN chmod +x ${FLYWHEEL}/create_fod_image.py
 
 # Install required packages     
 RUN apt-get update \

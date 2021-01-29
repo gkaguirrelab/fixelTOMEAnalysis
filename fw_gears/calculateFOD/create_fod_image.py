@@ -1,6 +1,6 @@
 import os 
 
-def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response_gm, response_csf, mrtrix_bin_path, fsl_bin_path, subject_id, workdir, output_dir):
+def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_bin_path, subject_id, workdir, output_dir):
 
     # Create the workdir and output_dir if they don't exist    
     if not os.path.exists(workdir):
@@ -32,9 +32,9 @@ def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response
     wm_fod = os.path.join(workdir, 'wm_fod.mif')
     gm_fod = os.path.join(workdir, 'gm_fod.mif')
     csf_fod = os.path.join(workdir, 'csf_fod.mif')
-    os.system('%s msmt_csd %s %s %s %s %s %s %s -mask %s -lmax 8,8,8 -force -fslgrad %s %s -quiet' % (os.path.join(mrtrix_bin_path, 'dwi2fod'), upsampled_dti,
-                                                                                                      response_wm, wm_fod, response_gm, gm_fod, response_csf, csf_fod,
-                                                                                                   upsampled_mask, bvecs, bvals))
+    os.system('%s msmt_csd %s %s %s %s %s %s %s -mask %s -lmax %s -force -fslgrad %s %s -quiet' % (os.path.join(mrtrix_bin_path, 'dwi2fod'), upsampled_dti,
+                                                                                                   response_wm, wm_fod, response_gm, gm_fod, response_csf, csf_fod,
+                                                                                                   upsampled_mask, lmax, bvecs, bvals))
     
     # Calculate a more conservetive mask from the upsampled data for the next
     # step (bias coorection and intensity normalization)

@@ -14,461 +14,74 @@
 	},
 	"license": "Other",
 	"config": {
-		"voxelSize":  {
+		“convexOpt.BValLowTHD”:  {
   			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
   			"type": "string"
+		},
+		"convexOpt.BValHighTHD":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.SPHMaxOrder":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.MinNumConstraint":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.NumOptiSteps":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.init_xi":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.xi_stepsize":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.xi_NumSteps":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.MaxNumFiberCrossingPerVoxel":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.UniformityFlag":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.NoiseFloor":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		"convexOpt.SPH_Coef_Nifti":  {
+  			"description": "Voxel size. If the images are isotropic, enter a single number. Otherwise, comma separate the values (e.g 1.25, 1.25, 1.50)",
+  			"type": "string"
+		},
+		“mrTrix.lmax”:  {
+  			"description": "the maximum spherical harmonic order for the output FOD(s).For algorithms with multiple outputs, this should be provided as a comma-separated list of integers, one for each output image; for single-output algorithms, only a single integer should be provided. If omitted, the command will use the lmax of the corresponding response function (i.e based on its number of coefficients), up to a maximum of 8.
+",
+  			"type": "string”,
+			“default: “8,8,8”
+		},
+		“method”:  {
+  			"description": “Method to use for FOD creation",
+  			"type": "string”,
+			"enum": [
+				“MRtrix sphericalDec”,
+				“Adaptive Convex Optimization (Tran & Shi, 2015)”,
+			]
 		}
 	},
 	"inputs": {
-		"fodImage01": {
-			"description": "FOD image.",
+		“hcp-diffArchive”: {
+			"description": “HCP-diff archive that contains preprocessed HCP images.”,
 			"base": "file",
 			"optional": false
-		},
-		"fodImage02": {
-			"description": "FOD image.",Tran, G., & Shi, Y. (2015)
-			"base": "file",
-			"optional": true
-		},
-		"fodImage03": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage04": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage05": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage06": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage07": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage08": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage09": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage10": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage11": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage12": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage13": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage14": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage15": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage16": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage17": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage18": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage19": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage20": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage21": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage22": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage23": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage24": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage25": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage26": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage27": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage28": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage29": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage30": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage31": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage32": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage33": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage34": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage35": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage36": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage37": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage38": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage39": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage40": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage41": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage42": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage43": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage44": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"fodImage45": {
-			"description": "FOD image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage01": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage02": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage03": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage04": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage05": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage06": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage07": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage08": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage09": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage10": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage11": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage12": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage13": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage14": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage15": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage16": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage17": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage18": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage19": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage20": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage21": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage22": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage23": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage24": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage25": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage26": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage27": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage28": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage29": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage30": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage31": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage32": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage33": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage34": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage35": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage36": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage37": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage38": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage39": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage40": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage41": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage42": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage43": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage44": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
-		"maskImage45": {
-			"description": "mask image.",
-			"base": "file",
-			"optional": true
-		},
+		}
 	}
 }

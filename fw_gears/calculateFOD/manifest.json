@@ -78,10 +78,25 @@
 		}
 	},
 	"inputs": {
-		“hcp-diffArchive”: {
+		“hcp_diff_archive”: {
 			"description": “HCP-diff archive that contains preprocessed HCP images.”,
 			"base": "file",
 			"optional": false
+		},
+		“response_wm”: {
+			"description": “White matter response function. Use this if you are using a unique function. If empty it will be calculated from the data”,
+			"base": "file",
+			"optional": true
+		},
+		“response_gm”: {
+			"description": “Gray matter response function. Use this if you are using a unique function. If empty it will be calculated from the data”,
+			"base": "file",
+			"optional": true
+		},
+		“response_csf”: {
+			"description": “CSF response function. Use this if you are using a unique function. If empty it will be calculated from the data”,
+			"base": "file",
+			"optional": true
 		}
 	}
 }

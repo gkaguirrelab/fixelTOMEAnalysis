@@ -15,9 +15,13 @@ first_output_dir = '/firstOutput' # Working in the flywheel output folder might 
 os.system('mkdir %s'%first_output_dir)
 final_output_dir = os.path.join(flywheel_base, 'output')
 matlab_func_path = '/tmp/adaptConOPt/run_fodMakerWrapper.sh'
+constraintFile = os.path.join(flywheel_base, 'ConstraintSet.mat')
+sphereParam = os.path.join(flywheel_base, 'sphere5120.obj')
 
 # Set paths to the tools 
 mrtrix_path = 'HERE MRTRIX PATH' #path to mrtrix bin
+mcr_path = '/usr/local/MATLAB/MATLAB_Runtime/v98'
+fsl_path = 'FSLDIR=/usr/lib/fsl/5.0;. /etc/fsl/5.0/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/usr/lib/fsl/5.0/'
 
 ###################Parse Config Here###########################################
 
@@ -40,26 +44,46 @@ SPH_Coef_Nifti = job_config['convexOpt.SPH_Coef_Nifti']
 lmax = job_config['mrTrix.lmax']
 
 ################### Input Files ###############################################
-# Get response functions here if passed else ‘’
-response_wm
-response_wm
-response_csf
 
-# Disect HCP here
-dwi_image
-mask_image
-bvecs
-bvals
-subject_id
+# paths to inputs
+hcp_diff_archive_path = os.path.join(flywheel_base, 'input/hcp_diff_archive')
+response_wm_path = os.path.join(flywheel_base, 'input/response_wm')
+response_gm_path = os.path.join(flywheel_base, 'input/response_gm')
+response_csf_path = os.path.join(flywheel_base, 'input/response_csf')
+
+# Get input files 
+hcp_diff_archive = os.path.join(hcp_diff_archive_path, os.listdir(hcp_diff_archive_path)[0])
+response_wm = os.path.join(response_wm_path, os.listdir(response_wm_path)[0])
+response_gm = os.path.join(response_gm_path, os.listdir(response_gm_path)[0])
+response_csf = os.path.join(response_csf_path, os.listdir(response_csf_path)[0])
+
+# Unzip HCP-diff
+scratch = '/hcp_directory'
+os.system('mkdir %s' % scratch)
+os.system('unzip %s -d %s' % (hcp_diff_archive, scratch))
+
+subject_id = os.listdir(scratch)[0]
+dwi_image = os.path.join(scratch, subject_id, 'All_DTI_acqs', 'data', 'data.nii.gz')
+mask_image = os.path.join(scratch, subject_id, 'All_DTI_acqs', 'data', 'nodif_brain_mask.nii.gz')
+bvecs = os.path.join(scratch, subject_id, 'All_DTI_acqs', 'data', 'bvecs')
+bvals = os.path.join(scratch, subject_id, 'All_DTI_acqs', 'data', 'bvals')
+
 #################### Process #################################################
+fod_workdir = os.path.join(first_output_dir, 'fod_workdir')
 
 if method == 'MRtrix sphericalDeconvolution':
-    create_fod_image(dwi_image, mask_image, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_path, subject_id, first_output_dir, final_output_dir)
+    create_fod_image(dwi_image, mask_image, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_path, subject_id, fod_workdir, final_output_dir)
+    new_mask_name = 'mask_%s' % subject_id
 elif method == 'Adaptive Convex Optimization (Tran & Shi, 2015)':
-        
+    cmd = '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' % (matlab_func_path, mcr_path, constraintFile, sphereParam, 
+                                                                                    fsl_path, fod_workdir, final_output_dir, subject_id, dwi_image,
+                                                                                    mask_image, bvals, bvecs, BValLowTHD, BValHighTHD,
+                                                                                    SPHMaxOrder, MinNumConstraint, NumOptiSteps,
+                                                                                    init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel,
+                                                                                    UniformityFlag, NoiseFloor)
+    os.system(cmd)
 else:
     print('Method unrecognized')
 
-# Run the template function
-template_path = os.path.join(final_output_dir, 'FODtemplate.mif')
-create_fod_population_template(fod_list, mask_list, mrtrix_path, first_output_dir, voxel_size, template_path)
+# Move the mask to the output folder as well
+os.system('cp %s %s' % (mask_image, os.path.join(final_output_dir, 'mask_' + subject_id + 'nii.gz')))

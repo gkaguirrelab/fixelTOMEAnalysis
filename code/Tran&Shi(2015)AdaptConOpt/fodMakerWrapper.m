@@ -15,7 +15,7 @@ FlipNII2RAS(inputDTI, flippedDTI, bval, bvec, gradTable)
 
 % Create a folder for splitted DTI and split the DTI for memory efficiency
 fprintf('Splitting DTI to speed up calculations \n')
-split_times = '25';
+split_times = '2';
 splittedDataFolder = fullfile(workdir, 'splittedData');
 system(['mkdir' ' ' splittedDataFolder]);
 SplitHCPDTIData(inputDTI, DTIMask, DTIMask, split_times, splittedDataFolder, subjectId)

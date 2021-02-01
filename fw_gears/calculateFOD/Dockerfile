@@ -12,6 +12,7 @@ COPY create_fod_image.py ${FLYWHEEL}/create_fod_image.py
 COPY ConstraintSet.mat ${FLYWHEEL}/ConstraintSet.mat
 COPY sphere5120.obj ${FLYWHEEL}/sphere5120.obj
 COPY adaptConOpt /tmp/adaptConOpt
+COPY fslinstaller.py /fslinstaller.py
 
 RUN chmod +x /flywheel/v0/run
 RUN chmod +x /opt/func_input/*  
@@ -47,8 +48,15 @@ RUN python3.7 -m pip install 'matplotlib==3.1.3' 'nibabel==2.5.1' 'numpy==1.18.1
 RUN git clone https://github.com/MRtrix3/mrtrix3.git
 RUN cd mrtrix3; ./configure; ./build
 
+# Download and install MCR on call
+RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2020a/Release/5/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2020a_Update_5_glnxa64.zip
+RUN mkdir matlabins
+RUN unzip MATLAB_Runtime_R2020a_Update_5_glnxa64.zip -d /matlabins/
+RUN /matlabins/install -mode silent -agreeToLicense yes
+
+# Install python2 for fslinstallation and install the newest verison of fsl
+RUN apt-get install python -y
+RUN python2 /fslinstaller.py -d /fsl 
+
 # Set the entrypoint  
 ENTRYPOINT /flywheel/v0/run
-
-
-

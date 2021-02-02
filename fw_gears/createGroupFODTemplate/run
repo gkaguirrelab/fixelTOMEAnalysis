@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python3.5
 
 import os
 import json
@@ -24,7 +24,7 @@ with open(config_path) as config_file:
     job_config = json.load(config_file)
 config = job_config['config']
 
-voxel_size = config['voxel_size']
+voxel_size = config['voxelSize']
 
 ################### Input Files ###############################################
 
@@ -49,6 +49,7 @@ for i in range(45):
         mask_list.append(mask)
 
 #################### Process #################################################
+print(fod_list)
 
 # If the mask list is empty make masks for each images. 
 if len(mask_list) == 0:

@@ -33,7 +33,7 @@ def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, work
     # Get the length of the list
     num_images = len(fod_list)    
     for i in range(num_images):
-        new_file_name = str(i + 1) + '.mif'
+        new_file_name = str(i + 1) + '.nii.gz'
         os.system('cp %s %s' % (fod_list[i], os.path.join(input_fods, new_file_name)))
         os.system('cp %s %s' % (mask_list[i], os.path.join(input_masks, new_file_name)))
     

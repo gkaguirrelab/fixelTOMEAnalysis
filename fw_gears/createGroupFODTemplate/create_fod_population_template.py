@@ -25,9 +25,9 @@ def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, work
     input_fods = os.path.join(workdir, 'input_fods')
     input_masks = os.path.join(workdir, 'input_masks')
     
-    if os.path.exists(input_fods):
+    if not os.path.exists(input_fods):
         os.system('mkdir %s' % input_fods)
-    if os.path.exists(input_masks):
+    if not os.path.exists(input_masks):
         os.system('mkdir %s' % input_masks)
         
     # Get the length of the list

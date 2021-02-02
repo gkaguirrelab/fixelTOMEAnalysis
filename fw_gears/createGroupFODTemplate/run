@@ -16,7 +16,7 @@ os.system('mkdir %s'%first_output_dir)
 final_output_dir = os.path.join(flywheel_base, 'output')
 
 # Set paths to the tools 
-mrtrix_path = 'HERE MRTRIX PATH' #path to mrtrix bin
+mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
 
 ###################Parse Config Here###########################################
 
@@ -40,11 +40,13 @@ for i in range(45):
         image_number_string = str(image_number)  
    
     image_path_and_name = os.path.join(flywheel_base, 'input', 'fodImage%s' % image_number_string) 
-    image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
-    fod_list.append(image)
+    if os.path.exists(image_path_and_name):
+        image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
+        fod_list.append(image)
     mask_path_and_name = os.path.join(flywheel_base, 'input', 'maskImage%s' % image_number_string) 
-    mask = os.path.join(mask_path_and_name, os.listdir(mask_path_and_name)[0]) 
-    mask_list.append(mask)
+    if os.path.exists(mask_path_and_name):    
+        mask = os.path.join(mask_path_and_name, os.listdir(mask_path_and_name)[0]) 
+        mask_list.append(mask)
 
 #################### Process #################################################
 

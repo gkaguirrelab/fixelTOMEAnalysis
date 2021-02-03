@@ -9,40 +9,34 @@
 			"description": "FOD image.",
 			"optional": false
 		},
-		"seed_image": {
-			"base": "file",
-			"description": "The first ROI image. This is where seeding starts",
-			"optional": false
-		},
 		"ROI_mask": {
 			"base": "file",
 			"description": "ROI mask. This is where the tracking will end unless selected two_sided option for directionality.",
 			"optional": false
+		},
+		"seed_image": {
+			"base": "file",
+			"description": "The first ROI image. This is where seeding starts",
+			"optional": false
 		}
 	},
 	"config": {
+		"atMaxLength": {
+			"default": "discard",
+			"description": "This decides what the algorithm will do once maxLength is reached",
+			"enum": [
+				"discard",
+				"stop"
+			],
+			"type": "string"
+		},
 		"directionality": {
+			"default": "one_sided",
 			"description": "If  set to two_sided, tracking is done along both directions starting from the seed point.",
 			"enum": [
 				"one_sided",
 				"two_sided"
 			],
-			"type": "string",
-			"default": "one_sided"
-		},
-		"timeLimit": {
-			"default": "10",
-			"description": "The algorithm will look for the tracts for the specified amount of minutes",
-			"type": "string"
-		},
-		"outputFileName": {
-			"default": "streamline",
-			"description": "The name of the output file",
-			"type": "string"
-		},
-		"minLength": {
-			"default": "5",
-			"description": "Minimum allowed length of the tracts",
 			"type": "string"
 		},
 		"maxLength": {
@@ -55,23 +49,19 @@
 			"description": "minimum FOD amplitude threshold",
 			"type": "string"
 		},
-		"seed_count": {
-			"default": "1000",
-			"description": "Number of streamlines to find",
+		"minLength": {
+			"default": "5",
+			"description": "Minimum allowed length of the tracts",
 			"type": "string"
-		},
-		"atMaxLength": {
-			"description": "This decides what the algorithm will do once maxLength is reached",
-			"enum": [
-				"discard",
-				"stop"
-			],
-			"type": "string",
-			"default": "discard"
 		},
 		"minRadiusOfCurvature": {
 			"default": "2",
 			"description": "Minimum radius of curvature",
+			"type": "string"
+		},
+		"outputFileName": {
+			"default": "streamline",
+			"description": "The name of the output file",
 			"type": "string"
 		},
 		"probeCount": {
@@ -79,6 +69,16 @@
 			"description": "Length of the probe",
 			"type": "string"
 		},
+		"seed_count": {
+			"default": "1000",
+			"description": "Number of streamlines to find",
+			"type": "string"
+		},
+		"timeLimit": {
+			"default": "10",
+			"description": "The algorithm will look for the tracts for the specified amount of minutes",
+			"type": "string"
+		}
 	},
 	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",
@@ -91,7 +91,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/calculate-fod:latest"
+			"image": "gkaguirrelab/trace-single-fod-tract:latest"
 		}
 	}
 }

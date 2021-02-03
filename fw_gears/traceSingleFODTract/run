@@ -1,8 +1,11 @@
 #!/anaconda3/bin/python3
 
 import os
+os.system('apt-get install libgl1-mesa-glx -y')
 import json
 from roi_tractography import roi_tractography
+from fury import window, actor
+from dipy.io.streamline import load_tractogram
 
 # Print the system specs in the log file
 os.system('cat /proc/cpuinfo')
@@ -16,7 +19,7 @@ os.system('mkdir %s'%first_output_dir)
 final_output_dir = os.path.join(flywheel_base, 'output')
 
 # Set paths to the tools 
-trekker_bin = '/trekker/build/bin/Linux/' #path to trekker
+trekker_bin = '/trekker/build/Linux/' #path to trekker
 
 ###################Parse Config Here###########################################
 
@@ -53,5 +56,5 @@ final_steamline_file_path = os.path.join(final_output_dir, outputFileName + '.vt
 final_plot_path = os.path.join(final_output_dir, outputFileName + '.png') 
 
 roi_tractography(FOD_image, seed_image, ROI_mask, final_steamline_file_path, final_plot_path, trekker_bin, 
-                 directionality, timeLimit, minLength, maxLength, minFODamp, 
-                 seed_count, atMaxLength, minRadiusOfCurvature, probeCount)
+                  directionality, timeLimit, minLength, maxLength, minFODamp, 
+                  seed_count, atMaxLength, minRadiusOfCurvature, probeCount)

@@ -1,4 +1,4 @@
-function fodMakerWrapper(constraints, sphereObject, fslPath, workdir, outputPath, subjectId, inputDTI, DTIMask, bval, bvec, BValLowTHD, BValHighTHD, SPHMaxOrder, MinNumConstraint, NumOptiSteps, init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel, UniformityFlag, NoiseFloor)
+function fodMakerWrapper(constraints, sphereObject, workdir, outputPath, subjectId, inputDTI, DTIMask, bval, bvec, BValLowTHD, BValHighTHD, SPHMaxOrder, MinNumConstraint, NumOptiSteps, init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel, UniformityFlag, NoiseFloor)
 
 % Create the workdir and outputDir
 system(['mkdir' ' ' workdir]);
@@ -10,8 +10,11 @@ system(['mkdir' ' ' outputPath]);
 % Run the RAS Flip script
 fprintf('Reorienting to RAS \n')
 flippedDTI = fullfile(workdir, ['RAS_' name ext]);
+flippedMask = fullfile(outputPath, ['mask_' name ext]);
 gradTable = fullfile(workdir, 'gradTable.txt');
+maskGrad = fullfile(workdir, 'donotuse.txt');
 FlipNII2RAS(inputDTI, flippedDTI, bval, bvec, gradTable)
+FlipNII2RAS(DTIMask, flippedMask, bval, bvec, maskGrad)
 
 % Create a folder for splitted DTI and split the DTI for memory efficiency
 fprintf('Splitting DTI to speed up calculations \n')
@@ -22,9 +25,9 @@ SplitHCPDTIData(inputDTI, DTIMask, DTIMask, split_times, splittedDataFolder, sub
 
 % Run the FOD 
 fprintf('Making FOD images from DTI pieces \n')
-splittedFODFolder = fullfile(workdir, 'splittedFOD');
+splittedFODFolder = fullfile(outputPath, 'splittedFOD');
 system(['mkdir' ' ' splittedFODFolder]);
-splittedTissueFolder = fullfile(workdir, 'splittedTissue');
+splittedTissueFolder = fullfile(outputPath, 'splittedTissue');
 system(['mkdir' ' ' splittedTissueFolder]);
 
 for piece = 1:str2num(split_times)
@@ -43,6 +46,3 @@ for piece = 1:str2num(split_times)
     end
     FOD_AdaptiveConvexOpt_WholeVolume_KernelOptimization(constraints, sphereObject, gradTable, BValLowTHD, BValHighTHD, splittedData, '0', splittedMask, SPHMaxOrder, MinNumConstraint, NumOptiSteps, init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel, UniformityFlag, NoiseFloor, outputFOD, outputTissueMap)
 end
-
-fprintf('Combining FOD pieces \n')
-system([fullfile(fslPath,'fslmerge') ' ' '-z' ' ' fullfile(outputPath, [subjectId '_FOD.nii.gz']) ' ' fullfile(splittedFODFolder, 'FOD*.nii')]);

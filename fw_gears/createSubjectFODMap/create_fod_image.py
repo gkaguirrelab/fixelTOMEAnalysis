@@ -52,5 +52,5 @@ def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response
                                                  gm_fod, normalized_gm_fod, csf_fod, normalized_csf_fod, normalize_mask))
     
     # Output the upsampled mask
-    mask_new_path = os.path.join(output_dir, 'mask_%s' % subject_id)
+    mask_new_path = os.path.join(output_dir, 'mask_%s.nii.gz' % subject_id)
     os.system('cp %s %s' % (upsampled_mask, mask_new_path))

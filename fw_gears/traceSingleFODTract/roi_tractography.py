@@ -13,19 +13,11 @@ def roi_tractography(fod_temp, seed, roi, output_file, output_diagnostic_image, 
     This wrapper was created to analyze TOME data. 
     '''
     
-    command = '''%s -fod %s -seed_image %s \
-                 -pathway=require_entry %s -pathway=stop_at_exit %s \
-                 -directionality %s -timeLimit %s -minLength %s \
-                 -maxLength %s -minFODamp %s -seed_count %s \
-                 -atMaxLength %s -minRadiusOfCurvature %s -probeCount %s 
-                 -output %s
-              ''' % (os.path.join(trekker_bin, 'trekker'), fod_temp, seed, 
-                     roi, roi, 
-                     directionality, timeLimit, minLength,
-                     maxLength, minFODamp, seed_count,
-                     atMaxLength, minRadiusOfCurvature, probeCount,
-                     output_file)
-    
+    command = '%s -fod %s -seed_image %s -pathway=require_entry %s -pathway=stop_at_exit %s -directionality %s -timeLimit %s -minLength %s -maxLength %s -minFODamp %s -seed_count %s -atMaxLength %s -minRadiusOfCurvature %s -probeCount %s -output %s'  % (os.path.join(trekker_bin, 'trekker'), fod_temp, seed, 
+                                                                                                                                                                                                                                                              roi, roi, directionality, timeLimit, minLength,
+                                                                                                                                                                                                                                                              maxLength, minFODamp, seed_count,
+                                                                                                                                                                                                                                                              atMaxLength, minRadiusOfCurvature, probeCount, output_file)
+    print(command)
     os.system(command)
       
     print('Making plots')
@@ -45,4 +37,4 @@ def roi_tractography(fod_temp, seed, roi, output_file, output_diagnostic_image, 
                         view_up=(0.18, 0.00, 0.98))
     
     # Display 
-    window.record(renderer, out_path=output_diagnostic_image, size=(600, 600))
+    window.record(renderer, out_path=output_diagnostic_image, size=(600, 600),  reset_camera=False)

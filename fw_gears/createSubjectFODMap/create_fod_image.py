@@ -50,3 +50,7 @@ def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response
     normalized_csf_fod = os.path.join(output_dir, 'preproc_csf_fod_%s.nii.gz' % subject_id)
     os.system('%s %s %s %s %s %s %s -mask %s' % (os.path.join(mrtrix_bin_path, 'mtnormalise'), wm_fod, normalized_wm_fod,
                                                  gm_fod, normalized_gm_fod, csf_fod, normalized_csf_fod, normalize_mask))
+    
+    # Output the upsampled mask
+    mask_new_path = os.path.join(output_dir, 'mask_%s.nii.gz' % subject_id)
+    os.system('cp %s %s' % (upsampled_mask, mask_new_path))

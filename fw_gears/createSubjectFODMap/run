@@ -81,20 +81,23 @@ bvals = os.path.join(scratch, subject_id, 'All_DTI_acqs', 'data', 'bvals')
 
 #################### Process #################################################
 fod_workdir = os.path.join(first_output_dir, 'fod_workdir')
+split_work_dir = os.path.join(first_output_dir, 'split_workdir')
 
 if method == 'MRtrix sphericalDec':
     create_fod_image(dwi_image, mask_image, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_path, subject_id, fod_workdir, final_output_dir)
-    new_mask_name = 'mask_%s' % subject_id
 elif method == 'Adaptive Convex Optimization (Tran and Shi, 2015)':
-    cmd = """%s;%s %s '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'""" % (fsl_path, matlab_func_path, mcr_path, constraintFile, sphereParam, 
-                                                                                                                                     fsl_bin, fod_workdir, final_output_dir, subject_id, dwi_image,
-                                                                                                                                     mask_image, bvals, bvecs, BValLowTHD, BValHighTHD,
-                                                                                                                                     SPHMaxOrder, MinNumConstraint, NumOptiSteps,
-                                                                                                                                     init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel,
-                                                                                                                                     UniformityFlag, NoiseFloor)
-    os.system(cmd)
+    cmd = """%s %s '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'""" % (matlab_func_path, mcr_path, constraintFile, sphereParam, 
+                                                                                                                             fod_workdir, split_work_dir, subject_id, dwi_image,
+                                                                                                                             mask_image, bvals, bvecs, BValLowTHD, BValHighTHD,
+                                                                                                                             SPHMaxOrder, MinNumConstraint, NumOptiSteps,
+                                                                                                                             init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel,
+                                                                                                                             UniformityFlag, NoiseFloor)
+    os.system(cmd)    
+    os.system('cp %s/mask* %s' % (split_work_dir, os.path.join(final_output_dir, 'mask_' + subject_id + '.nii.gz')))
+    split_fod_dir = os.path.join(split_work_dir, 'splittedFOD')
+    split_tissue_dir = os.path.join(split_work_dir, 'splittedTissue')
+    os.system('cd %s; %s -z %s *' % (split_fod_dir, os.path.join(fsl_bin, 'fslmerge'), os.path.join(final_output_dir, 'fod_%s.nii.gz' % subject_id)))
+    os.system('cd %s; %s -z %s *' % (split_tissue_dir, os.path.join(fsl_bin, 'fslmerge'), os.path.join(final_output_dir, 'tissueMap_%s.nii.gz' % subject_id)))
+
 else:
     print('Method unrecognized')
-
-# Move the mask to the output folder as well
-os.system('cp %s %s' % (mask_image, os.path.join(final_output_dir, 'mask_' + subject_id + '.nii.gz')))

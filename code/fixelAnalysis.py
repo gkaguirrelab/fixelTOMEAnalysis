@@ -29,7 +29,7 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
         mask_path = subject_mask_list[num_subject]
         
         # Get the subject name
-        fod_name = os.path.split(fod_path)[1][:7]
+        fod_name = os.path.split(fod_path)[1][:8]
         
         # Make subject folders for each subject 
         subject_folder = os.path.join(main_subject_folder, fod_name)        
@@ -53,15 +53,15 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
         subject_to_template = os.path.join(warp_calculations, 'subject2template_warp.mif')
         template_to_subject = os.path.join(warp_calculations, 'template2subject_warp.mif')
         os.system('%s %s -mask1 %s %s -nl_warp %s %s' % (os.path.join(mrtrix_path, 'mrregister'),
-                                                         fod_path, mask_path,
-                                                         wm_fod_template, subject_to_template,
-                                                         template_to_subject))
+                                                          fod_path, mask_path,
+                                                          wm_fod_template, subject_to_template,
+                                                          template_to_subject))
         
         # Transform masks to the template space
         mask_in_template = os.path.join(subject_folder, 'dwi_mask_in_template_space.mif')  
         os.system('%s %s -warp %s -interp nearest -datatype bit %s' % (os.path.join(mrtrix_path, 'mrtransform'),
-                                                                       mask_path, subject_to_template,
-                                                                       mask_in_template))
+                                                                        mask_path, subject_to_template,
+                                                                        mask_in_template))
          
         # Populate the all_masks_template with the paths to the mask_in_template
         all_masks_in_template.append(mask_in_template)
@@ -78,29 +78,28 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     # Calculate fixel mask from the template mask and FOD template
     fixel_mask = os.path.join(template_folder, 'fixel_mask')
     os.system('%s -mask %s -fmls_peak_value %s %s %s' % (os.path.join(mrtrix_path, 'fod2fixel'), template_mask,
-                                                         fmls_peak_value, wm_fod_template, fixel_mask))
+                                                          fmls_peak_value, wm_fod_template, fixel_mask))
         
     # Loop through each subject and register them to the template using the warps
     # we calculated in the previous loop
-    for sf in os.listdir(subject_folder):
-        subject_path_in_folder = os.path.join(subject_folder, sf)
+    for sf in os.listdir(main_subject_folder):
+        subject_path_in_folder = os.path.join(main_subject_folder, sf)
         os.system('%s %s -warp %s -reorient_fod no %s' % (os.path.join(mrtrix_path, 'mrtransform'),
                                                           os.path.join(subject_path_in_folder, 'wm_fod.mif'), 
                                                           os.path.join(subject_path_in_folder, 'warp_calculations', 'subject2template_warp.mif'),
                                                           os.path.join(subject_path_in_folder, 'fod_in_template_space_NOT_REORIENTED.mif')))
         
         # Calculate FD values for each subject         
-        os.system('%s -mask %s %s %s -afd %s' % (os.path.join(mrtrix_path, 'fod2fixel'),
-                                                 template_mask, 
-                                                 os.path.join(subject_path_in_folder, 'fod_in_template_space_NOT_REORIENTED.mif'),
-                                                 os.path.join(subject_path_in_folder, 'fixel_in_template_space_NOT_REORIENTED'),
-                                                 os.path.join(subject_path_in_folder, 'fd.mif')))
+        os.system('%s -mask %s %s %s -afd fd.mif' % (os.path.join(mrtrix_path, 'fod2fixel'),
+                                                      template_mask, 
+                                                      os.path.join(subject_path_in_folder, 'fod_in_template_space_NOT_REORIENTED.mif'),
+                                                      os.path.join(subject_path_in_folder, 'fixel_in_template_space_NOT_REORIENTED')))
         
         # Reorienting fixels 
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelreorient'),
-                                   os.path.join(subject_path_in_folder, 'fixel_in_template_space_NOT_REORIENTED'),
-                                   os.path.join(subject_path_in_folder, 'warp_calculations', 'subject2template_warp.mif'),
-                                   os.path.join(subject_path_in_folder, 'fixel_in_template_space')))
+                                    os.path.join(subject_path_in_folder, 'fixel_in_template_space_NOT_REORIENTED'),
+                                    os.path.join(subject_path_in_folder, 'warp_calculations', 'subject2template_warp.mif'),
+                                    os.path.join(subject_path_in_folder, 'fixel_in_template_space')))
     
         # Assign subject fixels to the template image
         os.system('%s %s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcorrespondence'),
@@ -118,8 +117,8 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
             os.system('cp %s %s' % (os.path.join(template_folder, 'fc', 'index.mif'), os.path.join(template_folder, 'log_fc')))
             os.system('cp %s %s' % (os.path.join(template_folder, 'fc', 'directions.mif'), os.path.join(template_folder, 'log_fc')))
         os.system('%s %s -log %s' % (os.path.join(mrtrix_path, 'mrcalc'),
-                                     os.path.join(template_folder, 'fc', '%s.mif' % sf),
-                                     os.path.join(template_folder, 'log_fc', '%s.mif' % sf)))
+                                      os.path.join(template_folder, 'fc', '%s.mif' % sf),
+                                      os.path.join(template_folder, 'log_fc', '%s.mif' % sf)))
         
         # Compute FDC 
         if not os.path.exists(os.path.join(template_folder, 'fdc')):
@@ -127,9 +126,9 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
             os.system('cp %s %s' % (os.path.join(template_folder, 'fc', 'index.mif'), os.path.join(template_folder, 'fdc')))
             os.system('cp %s %s' % (os.path.join(template_folder, 'fc', 'directions.mif'), os.path.join(template_folder, 'fdc')))
         os.system('%s %s %s -mult %s' % (os.path.join(mrtrix_path, 'mrcalc'),
-                                         os.path.join(template_folder, 'fd', '%s.mif' % sf),
-                                         os.path.join(template_folder, 'fc', '%s.mif' % sf),
-                                         os.path.join(template_folder, 'fdc', '%s.mif' % sf)))
+                                          os.path.join(template_folder, 'fd', '%s.mif' % sf),
+                                          os.path.join(template_folder, 'fc', '%s.mif' % sf),
+                                          os.path.join(template_folder, 'fdc', '%s.mif' % sf)))
 
     #### Process tractography ####
     # Convert vtk to tck
@@ -147,7 +146,7 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     # Map tracks to the fixel template 
     fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
     os.system('%s %s %s %s track_density' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
-                                             fixel_mask, fixel_folder_tracked))
+                                              fixel_mask, fixel_folder_tracked))
     track_density_file = os.path.join(fixel_folder_tracked, 'track_density.mif')
     
     # Threshold track density
@@ -162,13 +161,4 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fc'), track_density_thresholded, 
                                       os.path.join(output_folder, 'cropped_fc')))
     os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fdc'), track_density_thresholded, 
-                                      os.path.join(output_folder, 'cropped_fdc')))                                      
-                                
-    
-    
-    
-    
-    
-    
-    
-    
+                                      os.path.join(output_folder, 'cropped_fdc')))

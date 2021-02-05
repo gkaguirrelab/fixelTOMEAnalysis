@@ -145,7 +145,7 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     
     # Map tracks to the fixel template 
     fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
-    os.system('%s %s %s %s track_density' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
+    os.system('%s %s %s %s track_density.mif' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
                                               fixel_mask, fixel_folder_tracked))
     track_density_file = os.path.join(fixel_folder_tracked, 'track_density.mif')
     
@@ -162,3 +162,5 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
                                       os.path.join(output_folder, 'cropped_fc')))
     os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fdc'), track_density_thresholded, 
                                       os.path.join(output_folder, 'cropped_fdc')))
+    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
+                                      os.path.join(output_folder, 'cropped_log_fc')))

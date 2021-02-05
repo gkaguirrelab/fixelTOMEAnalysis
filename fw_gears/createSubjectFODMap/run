@@ -21,7 +21,7 @@ sphereParam = os.path.join(flywheel_base, 'sphere5120.obj')
 # Set paths to the tools 
 mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
 mcr_path = '/usr/local/MATLAB/MATLAB_Runtime/v98'
-fsl_path = 'FSLDIR=/fsl/;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/'
+fsl_path = 'FSLDIR=/fsl/;. ${FSLDIR}/etc/fslconf/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/bin/'
 fsl_bin = '/fsl/bin'
 
 ###################Parse Config Here###########################################

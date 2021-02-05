@@ -481,6 +481,11 @@
 			"type": "string",
 			"default": "1"
 		},
+		"save_intermediate_files": {
+			"description": "Saves workdir. Default true. Recommended for quality check as the output only includes the cropped fixel images",
+			"type": "boolean",
+			"default": true
+		}
 	},
 	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",

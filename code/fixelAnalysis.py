@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject_mask_list, wm_fod_template, left_track, right_track, fmls_peak_value='0.06', track_density_thresh='1'):
     
@@ -145,7 +146,7 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     
     # Map tracks to the fixel template 
     fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
-    os.system('%s %s %s %s track_density.mif' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
+    os.system('%s %s %s %s track_density' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
                                               fixel_mask, fixel_folder_tracked))
     track_density_file = os.path.join(fixel_folder_tracked, 'track_density.mif')
     
@@ -160,7 +161,42 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
                                       os.path.join(output_folder, 'cropped_fd')))
     os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fc'), track_density_thresholded, 
                                       os.path.join(output_folder, 'cropped_fc')))
+    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
+                                      os.path.join(output_folder, 'cropped_log_fc')))    
     os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fdc'), track_density_thresholded, 
                                       os.path.join(output_folder, 'cropped_fdc')))
-    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
-                                      os.path.join(output_folder, 'cropped_log_fc')))
+ 
+# Extract FD, FC, log_FC and FDC stats from images and write them to a text file
+    types = ['fd', 'fc', 'fdc', 'log_fc']
+    for ty in types:
+        text_file = open('%s' % os.path.join(output_folder, '%s_stats.txt' % ty), 'w')
+        initial_txt = ''
+        for i in os.listdir(os.path.join(output_folder, 'cropped_%s' % ty)):
+            if not i == 'index.mif' and not i =='directions.mif':
+                # Get image name and path
+                imname = i[:-4]
+                impath = os.path.join(output_folder, 'cropped_%s' % ty, imname + '.mif')
+                # Add image name to the path
+                initial_txt = initial_txt + imname + ' \n\n'
+                # Add mean
+                mean_byte = subprocess.check_output("%s -output mean %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
+                mean_str = mean_byte.decode('utf-8')
+                initial_txt = initial_txt + 'mean ' + mean_str
+                # Add median
+                median_byte = subprocess.check_output("%s -output median %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
+                median_str = median_byte.decode('utf-8')
+                initial_txt = initial_txt + 'median ' + median_str            
+                # Add std
+                std_byte = subprocess.check_output("%s -output std %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
+                std_str = std_byte.decode('utf-8')
+                initial_txt = initial_txt + 'std ' + std_str                            
+                # Add min
+                min_byte = subprocess.check_output("%s -output min %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
+                min_str = min_byte.decode('utf-8')
+                initial_txt = initial_txt + 'min ' + min_str               
+                # Add max
+                max_byte = subprocess.check_output("%s -output max %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
+                max_str = max_byte.decode('utf-8')
+                initial_txt = initial_txt + 'max ' + max_str + '\n\n'   
+        text_file.write(initial_txt)
+        text_file.close()

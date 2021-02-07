@@ -59,9 +59,9 @@ def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response
     normalized_wm_fod_nifti = os.path.join(output_dir, 'preproc_wm_fod_%s.nii.gz' % subject_id)
     normalized_gm_fod_nifti = os.path.join(output_dir, 'preproc_gm_fod_%s.nii.gz' % subject_id)
     normalized_csf_fod_nifti = os.path.join(output_dir, 'preproc_csf_fod_%s.nii.gz' % subject_id)
-    os.system('%s %s %s' % os.path.join(mrtrix_bin_path, 'mrconvert'), normalized_wm_fod, normalized_wm_fod_nifti)
-    os.system('%s %s %s' % os.path.join(mrtrix_bin_path, 'mrconvert'), normalized_gm_fod, normalized_gm_fod_nifti)
-    os.system('%s %s %s' % os.path.join(mrtrix_bin_path, 'mrconvert'), normalized_csf_fod, normalized_csf_fod_nifti)
+    os.system('%s %s %s' % (os.path.join(mrtrix_bin_path, 'mrconvert'), normalized_wm_fod, normalized_wm_fod_nifti))
+    os.system('%s %s %s' % (os.path.join(mrtrix_bin_path, 'mrconvert'), normalized_gm_fod, normalized_gm_fod_nifti))
+    os.system('%s %s %s' % (os.path.join(mrtrix_bin_path, 'mrconvert'), normalized_csf_fod, normalized_csf_fod_nifti))
     
     # Output the upsampled mask in mif and nifti formats
     mask_new_path = os.path.join(output_dir, 'upsampled_%s_mask.nii.gz' % subject_id)    

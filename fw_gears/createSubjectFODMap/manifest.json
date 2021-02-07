@@ -2,7 +2,7 @@
 	"name": "create-subject-fod-map",
 	"label": "createSubjectFODMap: Make FOD image from HCP-diff output",
 	"description": "This gear uses multi-shell HCP-diff output archive to calculate FOD images. The details of MRtrix spherical deconvolution method can be found here: mrtrix.readthedocs.io. If you use the adaptive convex optimization method please cite the following paper: Tran, G. and Shi, Y. (2015). Fiber orientation and compartment parameter estimation from multi-shell diffusion imaging. IEEE Transactions on Medical Imaging, 34(11), 2320–2332.",
-	"version": "0.1.6",
+	"version": "0.1.8",
 	"inputs": {
 		"hcp_diff_archive": {
 			"base": "file",

@@ -22,7 +22,6 @@ sphereParam = os.path.join(flywheel_base, 'sphere5120.obj')
 mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
 mcr_path = '/usr/local/MATLAB/MATLAB_Runtime/v98'
 fsl_path = 'FSLDIR=/fsl/;. ${FSLDIR}/etc/fslconf/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/bin/'
-fsl_bin = '/fsl/bin'
 
 ###################Parse Config Here###########################################
 
@@ -96,8 +95,8 @@ elif method == 'Adaptive Convex Optimization (Tran and Shi, 2015)':
     os.system('cp %s/mask* %s' % (split_work_dir, os.path.join(final_output_dir, 'mask_' + subject_id + '.nii.gz')))
     split_fod_dir = os.path.join(split_work_dir, 'splittedFOD')
     split_tissue_dir = os.path.join(split_work_dir, 'splittedTissue')
-    os.system('cd %s; %s -z %s *' % (split_fod_dir, os.path.join(fsl_bin, 'fslmerge'), os.path.join(final_output_dir, 'fod_%s.nii.gz' % subject_id)))
-    os.system('cd %s; %s -z %s *' % (split_tissue_dir, os.path.join(fsl_bin, 'fslmerge'), os.path.join(final_output_dir, 'tissueMap_%s.nii.gz' % subject_id)))
+    os.system('cd %s; %s -z %s *' % (split_fod_dir, os.path.join(fsl_path, 'fslmerge'), os.path.join(final_output_dir, 'fod_%s.nii.gz' % subject_id)))
+    os.system('cd %s; %s -z %s *' % (split_tissue_dir, os.path.join(fsl_path, 'fslmerge'), os.path.join(final_output_dir, 'tissueMap_%s.nii.gz' % subject_id)))
 
 else:
     print('Method unrecognized')

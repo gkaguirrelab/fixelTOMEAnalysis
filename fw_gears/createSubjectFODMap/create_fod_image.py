@@ -11,7 +11,7 @@ def create_fod_image(preprocessed_dti, mask, bvecs, bvals, response_wm, response
     # Convert Pre-processed DTI to mif forma
     if os.path.split(preprocessed_dti)[1][-7:] == '.nii.gz':
         preprocessed_dti_mif = os.path.join(workdir, os.path.split(preprocessed_dti)[1].replace('.nii.gz', '.mif'))
-        os.system('%s %s %s' % os.path.join(mrtrix_bin_path, 'mrconvert'), preprocessed_dti, preprocessed_dti_mif)
+        os.system('%s %s %s' % (os.path.join(mrtrix_bin_path, 'mrconvert'), preprocessed_dti, preprocessed_dti_mif))
     if os.path.split(preprocessed_dti)[1][-4:] == '.mif':
         preprocessed_dti_mif = preprocessed_dti
     else:

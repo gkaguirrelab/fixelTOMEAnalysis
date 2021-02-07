@@ -229,6 +229,16 @@
 			"description": "FOD image.",
 			"optional": true
 		},
+		"fodTemplate": {
+			"base": "file",
+			"description": "White matter FOD template",
+			"optional": false
+		},
+		"leftROI": {
+			"base": "file",
+			"description": "Left hemisphere ROI track",
+			"optional": false
+		},
 		"maskImage01": {
 			"base": "file",
 			"description": "mask image.",
@@ -454,37 +464,27 @@
 			"description": "mask image.",
 			"optional": true
 		},
-		"leftROI": {
-			"base": "file",
-			"description": "Left hemisphere ROI track",
-			"optional": false
-		},
 		"rightROI": {
 			"base": "file",
 			"description": "Right hemisphere ROI tracks",
-			"optional": false
-		},
-		"fodTemplate": {
-			"base": "file",
-			"description": "White matter FOD template",
 			"optional": false
 		}
 	},
 	"config": {
 		"fmls_peak_value": {
+			"default": "0.06",
 			"description": "Peak FOD values. Usually 0.06 is good for most datasets",
-			"type": "string",
-			"default": "0.06"
-		},
-		"track_density_thresh": {
-			"description": "Decides how many streamlines should pass through the fixel in order for it to be selected. Default: 1",
-			"type": "string",
-			"default": "1"
+			"type": "string"
 		},
 		"save_intermediate_files": {
+			"default": true,
 			"description": "Saves workdir. Default true. Recommended for quality check as the output only includes the cropped fixel images",
-			"type": "boolean",
-			"default": true
+			"type": "boolean"
+		},
+		"track_density_thresh": {
+			"default": "1",
+			"description": "Decides how many streamlines should pass through the fixel in order for it to be selected. Default: 1",
+			"type": "string"
 		}
 	},
 	"author": "Ozenc Taskin",
@@ -498,7 +498,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/create-group-fod-template:latest"
+			"image": "gkaguirrelab/extract-tract-fixel-values:latest"
 		}
 	}
 }

@@ -85,18 +85,39 @@ split_work_dir = os.path.join(first_output_dir, 'split_workdir')
 if method == 'MRtrix sphericalDec':
     create_fod_image(dwi_image, mask_image, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_path, subject_id, fod_workdir, final_output_dir)
 elif method == 'Adaptive Convex Optimization (Tran and Shi, 2015)':
+    # Resample DWI images
+    upscaled_dwi = os.path.join(first_output_dir, 'upscaled_dwi.nii.gz')
+    upscaled_mask = os.path.join(first_output_dir, 'upscaled_mask.nii.gz')
+    os.system('%s %s regrid -vox 1.25 %s' % (os.path.join(mrtrix_path, 'mrgrid'), dwi_image, upscaled_dwi))
+    os.system('%s %s regrid -vox 1.25 %s' % (os.path.join(mrtrix_path, 'mrgrid'), mask_image, upscaled_mask))  
+    # Run algorithm
     cmd = """%s %s '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'""" % (matlab_func_path, mcr_path, constraintFile, sphereParam, 
-                                                                                                                             fod_workdir, split_work_dir, subject_id, dwi_image,
-                                                                                                                             mask_image, bvals, bvecs, BValLowTHD, BValHighTHD,
+                                                                                                                             fod_workdir, split_work_dir, subject_id, upscaled_dwi,
+                                                                                                                             upscaled_mask, bvals, bvecs, BValLowTHD, BValHighTHD,
                                                                                                                              SPHMaxOrder, MinNumConstraint, NumOptiSteps,
                                                                                                                              init_xi, xi_stepsize, xi_NumSteps, MaxNumFiberCrossingPerVoxel,
                                                                                                                              UniformityFlag, NoiseFloor)
-    os.system(cmd)    
-    os.system('cp %s/mask* %s' % (split_work_dir, os.path.join(final_output_dir, 'mask_' + subject_id + '.nii.gz')))
+    os.system(cmd)   
+   
+    # Copy the mask over and save a mif version
+    final_mask_nifti = os.path.join(final_output_dir, 'mask_' + subject_id + '.nii.gz')
+    final_mask_mif = os.path.join(final_output_dir, 'mask_' + subject_id + '.mif')
+    os.system('cp %s/mask* %s' % (split_work_dir, final_mask_nifti))
+    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), final_mask_nifti, final_mask_mif))
+    
+    # Merge fod and tissue map
     split_fod_dir = os.path.join(split_work_dir, 'splittedFOD')
     split_tissue_dir = os.path.join(split_work_dir, 'splittedTissue')
-    os.system('cd %s; %s -z %s *' % (split_fod_dir, os.path.join(fsl_path, 'fslmerge'), os.path.join(final_output_dir, 'fod_%s.nii.gz' % subject_id)))
-    os.system('cd %s; %s -z %s *' % (split_tissue_dir, os.path.join(fsl_path, 'fslmerge'), os.path.join(final_output_dir, 'tissueMap_%s.nii.gz' % subject_id)))
+    merged_fod_nifti = os.path.join(final_output_dir, 'fod_%s.nii.gz' % subject_id)
+    merged_tissue_map_nifti = os.path.join(final_output_dir, 'tissueMap_%s.nii.gz' % subject_id)
+    os.system('cd %s; %s -z %s *' % (split_fod_dir, os.path.join(fsl_path, 'fslmerge'), merged_fod_nifti))
+    os.system('cd %s; %s -z %s *' % (split_tissue_dir, os.path.join(fsl_path, 'fslmerge'), merged_tissue_map_nifti))
+    
+    # Save mif versions of the nifti images
+    merged_fod_mif = os.path.join(final_output_dir, 'fod_%s.mif' % subject_id)
+    merged_tissue_map_mif = os.path.join(final_output_dir, 'tissueMap_%s.mif' % subject_id)
+    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), merged_fod_nifti, merged_fod_mif))
+    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), merged_tissue_map_nifti, merged_tissue_map_mif))
 
 else:
     print('Method unrecognized')

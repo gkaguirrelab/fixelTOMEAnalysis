@@ -2,7 +2,7 @@
 	"name": "extract-track-fixel-values",
 	"label": "extractTrackFixelValues: Extract fixel values from ROI tracks",
 	"description": "This gear does MRtrix fixel analysis on FOD images and extracts statistical values from ROI fibre tracks.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"inputs": {
 		"fodImage01": {
 			"base": "file",
@@ -481,6 +481,11 @@
 			"description": "Saves workdir. Default true. Recommended for quality check as the output only includes the cropped fixel images",
 			"type": "boolean"
 		},
+		"smooth_fixels": {
+			"default": false,
+			"description": "Smooth fixels with fixel2fixel connectivity calculated from the optic tract streamline",
+			"type": "boolean"
+		},
 		"track_density_thresh": {
 			"default": "1",
 			"description": "Decides how many streamlines should pass through the fixel in order for it to be selected. Default: 1",
@@ -498,7 +503,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/extract-tract-fixel-values:latest"
+			"image": "gkaguirrelab/extract-track-fixel-values:latest"
 		}
 	}
 }

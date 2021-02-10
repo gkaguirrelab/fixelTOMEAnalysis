@@ -1,7 +1,21 @@
 import os
 import subprocess
 
-def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject_mask_list, wm_fod_template, left_track, right_track, fmls_peak_value='0.06', track_density_thresh='1'):
+def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject_mask_list, wm_fod_template, left_track, right_track, fmls_peak_value='0.06', track_density_thresh='1', smooth_fixels=False):
+    
+    '''
+    mrtrix_path: Path to mrtrix bin. If you can call mrtrix functions from the terminal, you can leave this empty ''
+    workdir: Workdir where the intermediate files will be saved.
+    output_path: The output folder where the cropped fixel files will be saved
+    subject_fod_list: A python list that contains FOD images
+    subject_mask_list: A python list that contains MRI mask. Order should match the FOD list
+    wm_fod_template: White matter template FOD 
+    left_tract: Left hemisphere tractography streamlines
+    right_tract: RIght hemisphere tractography streamlines
+    fmls_peak_values: FOD peak values
+    tract_density: Threshold to decide how many steams should pass through a voxel for that voxel to be selected
+    smooth_fixels: Smooth fixels by fixel-fixel connectivity calculatedwith the streamlines  
+    '''
     
     # Get the length of the subject_fod_list and check if you have masks for each of them
     length_fod = len(subject_fod_list)
@@ -131,6 +145,7 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
                                           os.path.join(template_folder, 'fc', '%s.mif' % sf),
                                           os.path.join(template_folder, 'fdc', '%s.mif' % sf)))
 
+
     #### Process tractography ####
     # Convert vtk to tck
     tractography_folder = os.path.join(workdir, 'tractography')
@@ -144,6 +159,25 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
     os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
     
+    # Calculate fixel2fixel measurements and smooth fixel data if requested
+    if smooth_fixels == True:
+        smoothed_fd_dir = os.path.join(template_folder, 'smooth_fd')
+        smoothed_fc_dir = os.path.join(template_folder, 'smooth_fc')
+        smoothed_log_fc_dir = os.path.join(template_folder, 'smooth_log_fc')
+        smoothed_fdc_dir = os.path.join(template_folder, 'smooth_fdc')
+        
+        fixel_fixel_connectivity_dir = os.path.join(workdir, 'fixel2fixelConn')
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelconnectivity'),
+                                   fixel_mask, left_and_right_tck, fixel_fixel_connectivity_dir))
+        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(template_folder, 'fd'),
+                                                  smoothed_fd_dir, fixel_fixel_connectivity_dir))
+        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(template_folder, 'fc'),
+                                                  smoothed_fc_dir, fixel_fixel_connectivity_dir))
+        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(template_folder, 'log_fc'),
+                                                  smoothed_log_fc_dir, fixel_fixel_connectivity_dir))
+        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(template_folder, 'fdc'),
+                                                  smoothed_fdc_dir, fixel_fixel_connectivity_dir))        
+        
     # Map tracks to the fixel template 
     fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
     os.system('%s %s %s %s track_density' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
@@ -154,19 +188,41 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     track_density_thresholded = os.path.join(fixel_folder_tracked, 'thresh_track_density.mif')
     os.system('mrthreshold -abs %s %s %s' % (track_density_thresh, track_density_file, track_density_thresholded))
 
-    # Crop the fixels from subject FD, FC, and FDC
+    # Create the output folder if it doesn't exist 
     if not os.path.exists(output_folder):
         os.system('mkdir %s' % output_folder)
-    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fd'), track_density_thresholded, 
-                                      os.path.join(output_folder, 'cropped_fd')))
-    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fc'), track_density_thresholded, 
-                                      os.path.join(output_folder, 'cropped_fc')))
-    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
-                                      os.path.join(output_folder, 'cropped_log_fc')))    
-    os.system('fixelcrop %s %s %s' % (os.path.join(template_folder, 'fdc'), track_density_thresholded, 
-                                      os.path.join(output_folder, 'cropped_fdc')))
- 
-# Extract FD, FC, log_FC and FDC stats from images and write them to a text file
+    
+    # Crop the fixels from subject FD, FC, and FDC 
+    if smooth_fixels == False:     
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   os.path.join(template_folder, 'fd'), track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_fd')))
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   os.path.join(template_folder, 'fc'), track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_fc')))
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_log_fc')))    
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   os.path.join(template_folder, 'fdc'), track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_fdc')))
+    elif smooth_fixels == True:
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   smoothed_fd_dir, track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_fd')))
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   smoothed_fc_dir, track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_fc')))
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   smoothed_log_fc_dir, track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_log_fc')))    
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
+                                   smoothed_fdc_dir, track_density_thresholded, 
+                                   os.path.join(output_folder, 'cropped_fdc')))
+    else:
+        raise RuntimeError('smooth_fixels option was set to something other than False or True')
+         
+    # Extract FD, FC, log_FC and FDC stats from images and write them to a text file
     types = ['fd', 'fc', 'fdc', 'log_fc']
     for ty in types:
         text_file = open('%s' % os.path.join(output_folder, '%s_stats.txt' % ty), 'w')

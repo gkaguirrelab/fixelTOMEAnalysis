@@ -27,6 +27,7 @@ config = job_config['config']
 fmls_peak_value = config['fmls_peak_value']
 track_density_thresh = config['track_density_thresh']
 save_intermediate_files = config['save_intermediate_files']
+smooth_fixels = config['smooth_fixels']
 
 ################### Input Files ###############################################
 
@@ -60,7 +61,7 @@ template = os.path.join(template_path, os.listdir(template_path)[0])
 
 #################### Run Func #################################################
 
-fixelAnalysis(mrtrix_path, first_output_dir, final_output_dir, fod_list, mask_list, template, left_roi, right_roi, fmls_peak_value, track_density_thresh)
+fixelAnalysis(mrtrix_path, first_output_dir, final_output_dir, fod_list, mask_list, template, left_roi, right_roi, fmls_peak_value, track_density_thresh, smooth_fixels)
 
 # Save intermediate files if requested
 if save_intermediate_files == True:

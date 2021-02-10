@@ -49,17 +49,19 @@ for i in range(45):
         mask_list.append(mask)
 
 #################### Process #################################################
-print(fod_list)
+print('FOD LIST: %s' % fod_list)
+print('Mask LIST: %s' % mask_list)
 
 # If the mask list is empty make masks for each images. 
 if len(mask_list) == 0:
-    maskdir = '/maskdir'
-    os.system('mkdir %s' % maskdir)
-    for image in fod_list:
-        new_image_name = 'mask_' + os.path.split(image)[1]
-        mask_path = os.path.join(maskdir, new_image_name)
-        mask_list.append(mask_path)
-        os.system('%s %s %s' % (os.path.join(mrtrix_path,'dwi2mask'), image, mask_path))
+    raise RuntimeError('No masks found')
+    # maskdir = '/maskdir'
+    # os.system('mkdir %s' % maskdir)
+    # for image in fod_list:
+    #     new_image_name = 'mask_' + os.path.split(image)[1]
+    #     mask_path = os.path.join(maskdir, new_image_name)
+    #     mask_list.append(mask_path)
+    #     os.system('%s %s %s' % (os.path.join(mrtrix_path,'dwi2mask'), image, mask_path))
         
 # Run the template function
 template_path = os.path.join(final_output_dir, 'FODtemplate.mif')

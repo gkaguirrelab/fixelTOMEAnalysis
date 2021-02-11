@@ -66,3 +66,7 @@ if len(mask_list) == 0:
 # Run the template function
 template_path = os.path.join(final_output_dir, 'FODtemplate.mif')
 create_fod_population_template(fod_list, mask_list, mrtrix_path, first_output_dir, voxel_size, template_path)
+
+# Also output a nifti version of the template
+template_nifti = os.path.join(final_output_dir, 'FODtemplate.nii.gz')
+os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), template_path, template_nifti))

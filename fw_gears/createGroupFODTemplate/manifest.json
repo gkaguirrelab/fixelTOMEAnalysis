@@ -2,7 +2,7 @@
 	"name": "create-group-fod-template",
 	"label": "createGroupFODTemplate: MRtrix make FOD template",
 	"description": "This gear takes FOD data and masks to calculate a FOD template with Mrtrix's population_template function. Masks are optional. If none provided, the script makes masks for each FOD image and use them (only if the FOD image has the bval and bvecs in the header)",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"inputs": {
 		"fodImage01": {
 			"base": "file",

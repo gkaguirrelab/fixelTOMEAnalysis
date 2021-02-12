@@ -20,6 +20,7 @@ final_output_dir = os.path.join(flywheel_base, 'output')
 
 # Set paths to the tools 
 trekker_bin = '/trekker/build/Linux/' #path to trekker
+freesurfer_environment_path = 'export FREESURFER_HOME=/freesurfer;export SUBJECTS_DIR=/freesurfer/subjects/; export PATH="$FREESURFER_HOME/bin:$PATH"; export PATH="$SUBJECTS_DIR:$PATH"'
 
 ###################Parse Config Here###########################################
 
@@ -38,6 +39,8 @@ atMaxLength = config['atMaxLength']
 minRadiusOfCurvature = config['minRadiusOfCurvature']
 probeCount = config['probeCount']
 outputFileName = config['outputFileName']
+extractSeedLabel = config['extractSeedLabel']
+extractROILabel = config['extractROILabel']
 
 ################### Input Files ###############################################
 
@@ -45,6 +48,10 @@ outputFileName = config['outputFileName']
 FOD_image_path = os.path.join(flywheel_base, 'input/FOD_image')
 seed_image_path = os.path.join(flywheel_base, 'input/seed_image')
 ROI_mask_path = os.path.join(flywheel_base, 'input/ROI_mask')
+
+# Extract labels if requested
+os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, seed_image_path, extractSeedLabel, seed_image_path))
+os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, ROI_mask_path, extractROILabel, ROI_mask_path))
 
 # Get input files 
 FOD_image = os.path.join(FOD_image_path, os.listdir(FOD_image_path)[0])

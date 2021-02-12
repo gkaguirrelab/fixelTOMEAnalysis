@@ -78,7 +78,17 @@
 			"default": "10",
 			"description": "The algorithm will look for the tracts for the specified amount of minutes",
 			"type": "string"
-		}
+		},
+		"extractSeedLabel": {
+			"default": "NA",
+			"description": "Extract a label from the seed segmentation and use it instead of the whole label.",
+			"type": "string"
+		},
+		"extractROILabel": {
+			"default": "NA",
+			"description": "Extract a label from the roi segmentation and use it instead of the whole label",
+			"type": "string"
+		}		
 	},
 	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",

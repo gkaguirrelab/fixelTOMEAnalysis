@@ -33,6 +33,13 @@ RUN bash Anaconda3-2020.02-Linux-x86_64.sh -b -p /anaconda3
 ENV PATH=$PATH:/anaconda3/bin
 RUN conda update --all -y
 
+# Download and install Freesurfer on call
+RUN wget https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
+RUN mkdir freesurfer
+RUN tar -zxf freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz 
+COPY license.txt /freesurfer/license.txt
+ENV FREESURFER_HOME /freesurfer
+
 # Install the required python packages
 RUN pip install 'dipy' 'fury' 
 

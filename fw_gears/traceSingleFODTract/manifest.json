@@ -2,7 +2,7 @@
 	"name": "track-single-fod-tract",
 	"label": "trackSingleFODTract: Create streamlines between two ROI masks",
 	"description": "This gear uses trekker (https://dmritrekker.github.io/manual/trekker.html) to create tracts between two ROI masks. See the page for the citation if you use this tool. Warning: Different config defaults were set to construct optic pathway in the gear. See the trekker page for the software defaults.",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"inputs": {
 		"FOD_image": {
 			"base": "file",
@@ -37,6 +37,16 @@
 				"one_sided",
 				"two_sided"
 			],
+			"type": "string"
+		},
+		"extractROILabel": {
+			"default": "NA",
+			"description": "Extract a label from the roi segmentation and use it instead of the whole label",
+			"type": "string"
+		},
+		"extractSeedLabel": {
+			"default": "NA",
+			"description": "Extract a label from the seed segmentation and use it instead of the whole label.",
 			"type": "string"
 		},
 		"maxLength": {
@@ -78,17 +88,7 @@
 			"default": "10",
 			"description": "The algorithm will look for the tracts for the specified amount of minutes",
 			"type": "string"
-		},
-		"extractSeedLabel": {
-			"default": "NA",
-			"description": "Extract a label from the seed segmentation and use it instead of the whole label.",
-			"type": "string"
-		},
-		"extractROILabel": {
-			"default": "NA",
-			"description": "Extract a label from the roi segmentation and use it instead of the whole label",
-			"type": "string"
-		}		
+		}
 	},
 	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",
@@ -101,7 +101,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/trace-single-fod-tract:latest"
+			"image": "gkaguirrelab/tract-single-fod-track:latest"
 		}
 	}
 }

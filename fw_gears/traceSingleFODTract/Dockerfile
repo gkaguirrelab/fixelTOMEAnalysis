@@ -25,7 +25,8 @@ RUN apt-get install -y \
     zip \
     unzip \
     git \
-    cmake
+    cmake \
+    libgl1-mesa-glx
 
 # Install Anaconda
 RUN wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh

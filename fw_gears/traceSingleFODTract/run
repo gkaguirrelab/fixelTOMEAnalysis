@@ -1,14 +1,10 @@
 #!/anaconda3/bin/python3
 
 import os
-os.system('apt-get install libgl1-mesa-glx -y')
 import json
 from roi_tractography import roi_tractography
 from fury import window, actor
 from dipy.io.streamline import load_tractogram
-
-# Print the system specs in the log file
-os.system('cat /proc/cpuinfo')
 
 # Set initial Flywheel paths
 flywheel_base ='/flywheel/v0/'
@@ -49,14 +45,16 @@ FOD_image_path = os.path.join(flywheel_base, 'input/FOD_image')
 seed_image_path = os.path.join(flywheel_base, 'input/seed_image')
 ROI_mask_path = os.path.join(flywheel_base, 'input/ROI_mask')
 
-# Extract labels if requested
-os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, seed_image_path, extractSeedLabel, seed_image_path))
-os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, ROI_mask_path, extractROILabel, ROI_mask_path))
-
 # Get input files 
 FOD_image = os.path.join(FOD_image_path, os.listdir(FOD_image_path)[0])
 seed_image = os.path.join(seed_image_path, os.listdir(seed_image_path)[0])
 ROI_mask = os.path.join(ROI_mask_path, os.listdir(ROI_mask_path)[0])
+
+# Extract labels if requested
+if not extractSeedLabel == 'NA': 
+    os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, seed_image_path, extractSeedLabel, seed_image_path))
+if not extractSeedLabel == 'NA': 
+    os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, ROI_mask_path, extractROILabel, ROI_mask_path))
 
 #################### Process #################################################
 final_steamline_file_path = os.path.join(final_output_dir, outputFileName + '.vtk') 
@@ -65,3 +63,23 @@ final_plot_path = os.path.join(final_output_dir, outputFileName + '.png')
 roi_tractography(FOD_image, seed_image, ROI_mask, final_steamline_file_path, final_plot_path, trekker_bin, 
                   directionality, timeLimit, minLength, maxLength, minFODamp, 
                   seed_count, atMaxLength, minRadiusOfCurvature, probeCount)
+
+# Tryplots 
+print('Making plots')
+
+# Load fibre 
+fibre_data = load_tractogram(final_steamline_file_path, FOD_image)
+lines = fibre_data.streamlines
+
+# Set actor
+stream_actor = actor.line(lines)
+
+# Initiate renderer and scene
+renderer = window.Scene()
+renderer.add(stream_actor)
+renderer.set_camera(position=(-176.42, 118.52, 128.20),
+                    focal_point=(113.30, 128.31, 76.56),
+                    view_up=(0.18, 0.00, 0.98))
+    
+# Display 
+window.record(renderer, out_path=final_plot_path, size=(600, 600),  reset_camera=False)

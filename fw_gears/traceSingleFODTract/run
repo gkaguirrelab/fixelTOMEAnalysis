@@ -59,17 +59,17 @@ os.system('cp %s %s' % (FOD_image_initial, FOD_image))
 os.system('cp %s %s' % (seed_image_initial, seed_image))
 os.system('cp %s %s' % (ROI_mask_initial, ROI_mask))
 
-# Dilate masks if requested
-if not dilateSeedMask == "0":
-    os.system('%s; /freesurfer/bin/mri_binarize --i %s --min 1 --dilate %s --o %s' % (freesurfer_environment_path, seed_image, dilateSeedMask, seed_image))
-if not dilateROIMask == "0":
-    os.system('%s; /freesurfer/bin/mri_binarize --i %s --min 1 --dilate %s --o %s' % (freesurfer_environment_path, ROI_mask, dilateROIMask, ROI_mask))
-
 # Extract labels if requested
 if not extractSeedLabel == 'NA': 
     os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, seed_image, extractSeedLabel, seed_image))
 if not extractSeedLabel == 'NA': 
     os.system('%s; /freesurfer/bin/mri_extract_label %s %s %s' % (freesurfer_environment_path, ROI_mask, extractROILabel, ROI_mask))
+    
+# Dilate masks if requested
+if not dilateSeedMask == "0":
+    os.system('%s; /freesurfer/bin/mri_binarize --i %s --min 1 --dilate %s --o %s' % (freesurfer_environment_path, seed_image, dilateSeedMask, seed_image))
+if not dilateROIMask == "0":
+    os.system('%s; /freesurfer/bin/mri_binarize --i %s --min 1 --dilate %s --o %s' % (freesurfer_environment_path, ROI_mask, dilateROIMask, ROI_mask))
 
 #################### Process #################################################
 final_steamline_file_path = os.path.join(final_output_dir, outputFileName + '.vtk') 

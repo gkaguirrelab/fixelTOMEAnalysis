@@ -14,6 +14,7 @@ final_output_dir = os.path.join(flywheel_base, 'output')
 
 # Set paths to the tools 
 trekker_bin = '/trekker/build/Linux/' #path to trekker
+mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
 freesurfer_environment_path = 'export FREESURFER_HOME=/freesurfer;export SUBJECTS_DIR=/freesurfer/subjects/; export PATH="$FREESURFER_HOME/bin:$PATH"; export PATH="$SUBJECTS_DIR:$PATH"'
 
 ###################Parse Config Here###########################################
@@ -73,7 +74,17 @@ if not dilateROIMask == "0":
 
 #################### Process #################################################
 final_steamline_file_path = os.path.join(final_output_dir, outputFileName + '.vtk') 
-final_plot_path = os.path.join(final_output_dir, outputFileName + '.png') 
-roi_tractography(FOD_image, seed_image, ROI_mask, final_steamline_file_path, final_plot_path, trekker_bin, 
+roi_tractography(FOD_image, seed_image, ROI_mask, final_steamline_file_path, trekker_bin, 
                   directionality, timeLimit, minLength, maxLength, minFODamp, 
                   seed_count, atMaxLength, minRadiusOfCurvature, probeCount)
+tck_streamline = os.path.join(first_output_dir, outputFileName + '.tck')
+os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), final_steamline_file_path, tck_streamline))
+
+# Plot 
+os.system('Xvfb :1 -screen 0 1024x768x16 & DISPLAY=:1 %s %s -noannotations -tractography.load %s -mode 3 -tractography.slab 0 -imagevisible 0 -capture.folder %s -capture.prefix %s -capture.grab -exit' % (os.path.join(mrtrix_path, 'mrview'),
+                                                                                                                                                                                             FOD_image, tck_streamline,
+                                                                                                                                                                                             final_output_dir, 'track'))
+os.system('Xvfb :99 -screen 0 1024x768x16 & DISPLAY=:99 %s %s -noannotations -tractography.load %s -mode 2 -tractography.slab 0 -capture.folder %s -capture.prefix %s -capture.grab -exit' % (os.path.join(mrtrix_path, 'mrview'),
+                                                                                                                                                                             FOD_image, tck_streamline,
+                                                                                                                                                                             final_output_dir, 'track_on_fod_noSlab'))
+

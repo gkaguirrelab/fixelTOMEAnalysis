@@ -1,6 +1,6 @@
 import os
 
-def roi_tractography(fod_temp, seed, roi, output_file, output_diagnostic_image, trekker_bin='', 
+def roi_tractography(fod_temp, seed, roi, output_file, trekker_bin='', 
                      directionality='one_sided', timeLimit='10',minLength='5',
                      maxLength='400', minFODamp='0.2', seed_count='1000',
                      atMaxLength='discard', minRadiusOfCurvature='2', probeCount='1'):

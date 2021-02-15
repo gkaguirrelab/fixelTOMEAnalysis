@@ -15,6 +15,7 @@ def roi_tractography(fod_temp, seed, roi, output_file, output_diagnostic_image, 
                                                                                                                                                                                                                                                               roi, roi, directionality, timeLimit, minLength,
                                                                                                                                                                                                                                                               maxLength, minFODamp, seed_count,
                                                                                                                                                                                                                                                               atMaxLength, minRadiusOfCurvature, probeCount, output_file)
-    print(command)
-    os.system(command)
+   
+    log_path = os.path.split(output_file)[0]
+    os.system(command + ' > %s/trekker.log' % log_path)
       

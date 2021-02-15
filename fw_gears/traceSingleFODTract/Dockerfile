@@ -41,9 +41,6 @@ RUN tar -zxf freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
 COPY license.txt /freesurfer/license.txt
 ENV FREESURFER_HOME /freesurfer
 
-# Install the required python packages
-RUN pip install 'dipy' 'fury' 
-
 # Install trekker
 RUN unzip trekker.zip
 #RUN cd /trekker/; bash build_Linux.sh

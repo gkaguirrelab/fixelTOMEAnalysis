@@ -3,8 +3,6 @@
 import os
 import json
 from roi_tractography import roi_tractography
-from fury import window, actor
-from dipy.io.streamline import load_tractogram
 
 # Set initial Flywheel paths
 flywheel_base ='/flywheel/v0/'
@@ -76,29 +74,6 @@ if not extractSeedLabel == 'NA':
 #################### Process #################################################
 final_steamline_file_path = os.path.join(final_output_dir, outputFileName + '.vtk') 
 final_plot_path = os.path.join(final_output_dir, outputFileName + '.png') 
-os.system('cp %s %s' % (FOD_image, final_output_dir))
-os.system('cp %s %s' % (seed_image, final_output_dir))
-os.system('cp %s %s' % (ROI_mask, final_output_dir))
 roi_tractography(FOD_image, seed_image, ROI_mask, final_steamline_file_path, final_plot_path, trekker_bin, 
                   directionality, timeLimit, minLength, maxLength, minFODamp, 
                   seed_count, atMaxLength, minRadiusOfCurvature, probeCount)
-
-# Try plots 
-print('Making plots')
-
-# Load fibre 
-fibre_data = load_tractogram(final_steamline_file_path, FOD_image)
-lines = fibre_data.streamlines
-
-# Set actor
-stream_actor = actor.line(lines)
-
-# Initiate renderer and scene
-renderer = window.Scene()
-renderer.add(stream_actor)
-renderer.set_camera(position=(-176.42, 118.52, 128.20),
-                    focal_point=(113.30, 128.31, 76.56),
-                    view_up=(0.18, 0.00, 0.98))
-    
-# Display 
-window.record(renderer, out_path=final_plot_path, size=(600, 600),  reset_camera=False)

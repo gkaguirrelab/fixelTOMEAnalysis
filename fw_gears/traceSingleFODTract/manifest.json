@@ -30,6 +30,16 @@
 			],
 			"type": "string"
 		},
+		"dilateROIMask": {
+			"default": "0",
+			"description": "Dilare ROI mask",
+			"type": "string"
+		},
+		"dilateSeedMask": {
+			"default": "0",
+			"description": "Dilate seed mask",
+			"type": "string"
+		},
 		"directionality": {
 			"default": "one_sided",
 			"description": "If  set to two_sided, tracking is done along both directions starting from the seed point.",
@@ -88,16 +98,6 @@
 			"default": "10",
 			"description": "The algorithm will look for the tracts for the specified amount of minutes",
 			"type": "string"
-		},
-		"dilateSeedMask": {
-			"default": "0",
-			"description": "Dilate seed mask",
-			"type": "string"
-		},
-		"dilateROIMask": {
-			"default": "0",
-			"description": "Dilare ROI mask",
-			"type": "string"
 		}
 	},
 	"author": "Ozenc Taskin",
@@ -111,7 +111,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/trace-single-fod-track:latest"
+			"image": "gkaguirrelab/trace-single-fod-tract:latest"
 		}
 	}
 }

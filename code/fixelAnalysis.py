@@ -44,7 +44,12 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
         mask_path = subject_mask_list[num_subject]
         
         # Get the subject name
-        fod_name = os.path.split(fod_path)[1][:8]
+        if 'nii.gz' in os.path.split(fod_path)[1]:
+            fod_name = os.path.split(fod_path)[1].replace('.nii.gz', '')
+        elif '.mif' in os.path.split(fod_path)[1]:
+            fod_name = os.path.split(fod_path)[1].replace('.mif', '')
+        else:
+            raise RuntimeError('Input image type is not recognzied. Use mif or nifti files')
         
         # Make subject folders for each subject 
         subject_folder = os.path.join(main_subject_folder, fod_name)        
@@ -53,12 +58,16 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
         else:
             raise RuntimeError('You have two images with the same name. Make sure you are not using the same subject multiple times')
         
-        # Move the fod and mask images in their subject folders after converting to mif
+        # Move the fod and mask images in their subject folders after converting to mif if input is nifti
         new_fod_path_and_name = os.path.join(subject_folder, 'wm_fod.mif')
         new_mask_path_and_name = os.path.join(subject_folder, 'mask.mif')
-        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), fod_path, new_fod_path_and_name))
-        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), mask_path, new_mask_path_and_name))
-        
+        if 'nii.gz' in os.path.split(fod_path)[1]:
+            os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), fod_path, new_fod_path_and_name))
+            os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), mask_path, new_mask_path_and_name))
+        else:
+            os.system('cp %s %s' % (fod_path, new_fod_path_and_name))
+            os.system('cp %s %s' % (mask_path, new_mask_path_and_name))
+            
         # Create the warp calculation workdir for each subject
         warp_calculations = os.path.join(subject_folder, 'warp_calculations')
         if not os.path.exists(warp_calculations):
@@ -168,7 +177,7 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
         
         fixel_fixel_connectivity_dir = os.path.join(workdir, 'fixel2fixelConn')
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelconnectivity'),
-                                   fixel_mask, left_and_right_tck, fixel_fixel_connectivity_dir))
+                                    fixel_mask, left_and_right_tck, fixel_fixel_connectivity_dir))
         os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(template_folder, 'fd'),
                                                   smoothed_fd_dir, fixel_fixel_connectivity_dir))
         os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(template_folder, 'fc'),
@@ -180,13 +189,13 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
         
     # Map tracks to the fixel template 
     fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
-    os.system('%s %s %s %s track_density' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
+    os.system('%s %s %s %s track_density.mif' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
                                               fixel_mask, fixel_folder_tracked))
     track_density_file = os.path.join(fixel_folder_tracked, 'track_density.mif')
     
     # Threshold track density
     track_density_thresholded = os.path.join(fixel_folder_tracked, 'thresh_track_density.mif')
-    os.system('mrthreshold -abs %s %s %s' % (track_density_thresh, track_density_file, track_density_thresholded))
+    os.system('%s -abs %s %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_thresh, track_density_file, track_density_thresholded))
 
     # Create the output folder if it doesn't exist 
     if not os.path.exists(output_folder):
@@ -195,30 +204,30 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     # Crop the fixels from subject FD, FC, and FDC 
     if smooth_fixels == False:     
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   os.path.join(template_folder, 'fd'), track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_fd')))
+                                    os.path.join(template_folder, 'fd'), track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_fd')))
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   os.path.join(template_folder, 'fc'), track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_fc')))
+                                    os.path.join(template_folder, 'fc'), track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_fc')))
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_log_fc')))    
+                                    os.path.join(template_folder, 'log_fc'), track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_log_fc')))    
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   os.path.join(template_folder, 'fdc'), track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_fdc')))
+                                    os.path.join(template_folder, 'fdc'), track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_fdc')))
     elif smooth_fixels == True:
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   smoothed_fd_dir, track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_fd')))
+                                    smoothed_fd_dir, track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_fd')))
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   smoothed_fc_dir, track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_fc')))
+                                    smoothed_fc_dir, track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_fc')))
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   smoothed_log_fc_dir, track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_log_fc')))    
+                                    smoothed_log_fc_dir, track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_log_fc')))    
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelcrop'), 
-                                   smoothed_fdc_dir, track_density_thresholded, 
-                                   os.path.join(output_folder, 'cropped_fdc')))
+                                    smoothed_fdc_dir, track_density_thresholded, 
+                                    os.path.join(output_folder, 'cropped_fdc')))
     else:
         raise RuntimeError('smooth_fixels option was set to something other than False or True')
          

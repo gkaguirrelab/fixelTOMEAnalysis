@@ -61,8 +61,8 @@ for analysis in hcp_results:
     input_mask_key = 'maskImage%s' % val
     
     # Get values
-    input_fod = analysis.get_file('fod_%s.nii.gz' % subject_name)
-    input_mask = analysis.get_file('mask_%s.nii.gz' % subject_name)
+    input_fod = analysis.get_file('fod_%s.mif' % subject_name)
+    input_mask = analysis.get_file('mask_%s.mif' % subject_name)
     
     # Combine
     inputs_fod[input_fod_key] = input_fod

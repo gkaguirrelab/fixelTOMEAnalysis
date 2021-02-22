@@ -1,0 +1,2 @@
+/flywheel/v0/output/antsBTPtemplate0warp.nii.gz Max : [0.716228, 0.0793075, 0.71301] Min : [0, 0, 0] Mean : [0.0492614, 0.0479858, 0.0528935]
+/flywheel/v0/output/antsBTPtemplate0warp.nii.gz Max : [0.173746, 0.389137, 0.359366] Min : [0, 0, 0] Mean : [0.0679268, 0.0353549, 0.044304]

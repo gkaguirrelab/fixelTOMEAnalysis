@@ -1,0 +1,83 @@
+#!/usr/bin/python2.7
+
+import os
+import json
+
+# Print the system specs in the log file
+os.system('cat /proc/cpuinfo')
+
+# Set initial Flywheel paths
+flywheel_base ='/flywheel/v0/'
+manifest_file = os.path.join(flywheel_base, 'manifest.json')
+config_path = os.path.join(flywheel_base, 'config.json')
+first_output_dir = '/firstOutput' # Working in the flywheel output folder might cause issues so creating a first level output folder 
+os.system('mkdir %s'%first_output_dir)
+final_output_dir = os.path.join(flywheel_base, 'output')
+
+###################Parse Config Here###########################################
+
+with open(config_path) as config_file:
+    job_config = json.load(config_file)
+config = job_config['config']
+
+a = config['a']
+b = config['b']
+d = config['d']
+e = config['e']
+g = config['g']
+i = config['i']
+j = config['j']
+k = config['k']
+w = config['w']
+q = config['q']
+f = config['f']
+s = config['s']
+n = config['n']
+o = config['o']
+r = config['r']
+l = config['l']
+m = config['m']
+t = config['t']
+u = config['u']
+v = config['v']
+y = config['y']
+
+# Get the target image if it exists
+z_path = os.path.join(flywheel_base, 'input', 'aTargetImage')
+if os.path.exists(z_path):
+    z = os.path.join(z_path, os.listdir(z_path)[0])
+
+################### Input Files ###############################################
+
+input_dir = '/tmp/input_images'
+os.system('mkdir %s' % input_dir)
+
+# Find the images and put the paths into fod/mask python lists
+for i in range(50):
+    image_number = i+1  
+    if image_number < 10: 
+        image_number_string = '0' + str(image_number)
+    else:
+        image_number_string = str(image_number)  
+
+    # Check if the image exists in the directory and raise error if any two images are named the same
+    image_path_and_name = os.path.join(flywheel_base, 'input', 'image%s' % image_number_string) 
+    if os.path.exists(image_path_and_name):
+        image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
+        image_name =  os.listdir(image_path_and_name)[0]
+        if image_name in os.listdir(input_dir):
+            raise RuntimeError('You have at least two images with the same name. Make sure your input images are named differently.')
+        else:
+            os.system('cp %s %s' % (image, input_dir))
+
+#################### Process #################################################
+if os.path.exists(z_path):
+    command = 'antsMultivariateTemplateConstruction2.sh -d %s -a %s -b %s -e %s -g %s -i %s -j %s \
+-k %s -w %s -q %s -f %s -s %s -n %s -o %s -r %s -l %s -m %s -t %s -u %s -v %s -y %s -z %s %s' % (d,a,b,e,g,i,j,k,w,q,f,s,n,os.path.join(final_output_dir,o),
+                                                                                                 r,l,m,t,u,v,y,z, os.path.join(input_dir, '*.nii.gz'))
+else:
+    command = 'antsMultivariateTemplateConstruction2.sh -d %s -a %s -b %s -e %s -g %s -i %s -j %s \
+-k %s -w %s -q %s -f %s -s %s -n %s -o %s -r %s -l %s -m %s -t %s -u %s -v %s -y %s %s' % (d, a,b,e,g,i,j,k,w,q,f,s,n,os.path.join(final_output_dir,o),
+                                                                                           r,l,m,t,u,v,y, os.path.join(input_dir, '*.nii.gz'))    
+print(os.listdir('/usr/bin'))
+os.system(command)

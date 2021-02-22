@@ -60,15 +60,13 @@ for i in range(50):
     else:
         image_number_string = str(image_number)  
 
-    # Check if the image exists in the directory and raise error if any two images are named the same
+    # Check if the image exists in the directory and get it
     image_path_and_name = os.path.join(flywheel_base, 'input', 'image%s' % image_number_string) 
     if os.path.exists(image_path_and_name):
         image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
-        image_name =  os.listdir(image_path_and_name)[0]
-        if image_name in os.listdir(input_dir):
-            raise RuntimeError('You have at least two images with the same name. Make sure your input images are named differently.')
-        else:
-            os.system('cp %s %s' % (image, input_dir))
+        image_name = os.listdir(image_path_and_name)[0]
+        os.system('cp %s %s/%s.nii.gz' % (image, input_dir, image_number))
+        print('renamed %s to %s.nii.gz' % (image_name, image_number))
 
 #################### Process #################################################
 if os.path.exists(z_path):

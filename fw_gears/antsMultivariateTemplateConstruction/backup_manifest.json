@@ -2,8 +2,13 @@
 	"name": "ants-multivariate-template-construction",
 	"label": "antsMultivariateTemplateConstruction: Make a template with ANTs multivariate template construction 2",
 	"description": "Please reference http://www.ncbi.nlm.nih.gov/pubmed/20851191 when employing this script in your studies. A reproducible evaluation of ANTs similarity metric performance in brain image registration. Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. Also see http://www.ncbi.nlm.nih.gov/pubmed/19818860 for more details. The script has been updated and improved since this publication.",
-	"version": "0.1.0",
+	"version": "0.1.6",
 	"inputs": {
+		"aTargetImage": {
+			"base": "file",
+			"description": "Use this this volume as the target of all inputs. When not used, the script will create an unbiased starting point by averaging all inputs.",
+			"optional": true
+		},
 		"image01": {
 			"base": "file",
 			"description": "nifti image.",
@@ -229,112 +234,137 @@
 			"description": "nifti image.",
 			"optional": true
 		},
-		"aTargetImage": {
+		"image46": {
 			"base": "file",
-			"description": "Use this this volume as the target of all inputs. When not used, the script will create an unbiased starting point by averaging all inputs.",
+			"description": "nifti image.",
+			"optional": true
+		},
+		"image47": {
+			"base": "file",
+			"description": "nifti image.",
+			"optional": true
+		},
+		"image48": {
+			"base": "file",
+			"description": "nifti image.",
+			"optional": true
+		},
+		"image49": {
+			"base": "file",
+			"description": "nifti image.",
+			"optional": true
+		},
+		"image50": {
+			"base": "file",
+			"description": "nifti image.",
 			"optional": true
 		}
 	},
 	"config": {
 		"a": {
+			"default": "1",
 			"description": "image statistic used to summarize images (default 1). 0 = mean, 1 = mean of normalized intensities, 2 = median",
-			"type": "string",
-			"default": "1", 
+			"type": "string"
 		},
 		"b": {
+			"default": "0",
 			"description": "Backup images and results from all iterations (default = 0):  Boolean to save the transform files, bias corrected, and warped images for each iteration.",
+			"type": "string"
+		},
+		"d": {
+			"description": "Image dimension",
 			"type": "string",
-			"default": "0", 
+			"default": "3"
 		},
 		"e": {
+			"default": "1",
 			"description": "use single precision ( default 1 )",
-			"type": "string",
-			"default": "1", 
-		},
-		"g": {
-			"description": "Gradient step size (default 0.25): smaller in magnitude results in more cautious steps.  Use smaller steps to refine template details. 0.25 is an upper (aggressive) limit for this parameter.",
-			"type": "string",
-			"default": "0.25", 
-		},
-		"i": {
-			"description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
-			"type": "string",
-			"default": "4", 
-		},
-		"j": {
-			"description": "Number of cpu cores to use locally for pexec option (default 2)",
-			"type": "string",
-			"default": "2", 
-		},
-		"k": {
-			"description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components (-k 3).",
-			"type": "string",
-			"default": "1", 
-		},
-		"w": {
-			"description": "Modality weights used in the similarity metric (default = 1): specified as e.g. 1x0.5x0.75.",
-			"type": "string",
-			"default": "1", 
-		},
-		"q": {
-			"description": "Max iterations for each pairwise registration (default = 100x100x70x20):",
-			"type": "string",
-			"default": "100x100x70x20", 
+			"type": "string"
 		},
 		"f": {
+			"default": "6x4x2x1",
 			"description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations. Needs to have the same number of components.",
-			"type": "string",
-			"default": "6x4x2x1", 
+			"type": "string"
 		},
-		"s": {
-			"description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations.  Needs to have the same number of components.",
-			"type": "string",
-			"default": "3x2x1x0", 
+		"g": {
+			"default": "0.25",
+			"description": "Gradient step size (default 0.25): smaller in magnitude results in more cautious steps.  Use smaller steps to refine template details. 0.25 is an upper (aggressive) limit for this parameter.",
+			"type": "string"
 		},
-		"n": {
-			"description": "N4BiasFieldCorrection of moving image: 0 == off, 1 == on (default 1)",
-			"type": "string",
-			"default": "1", 
+		"i": {
+			"default": "4",
+			"description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
+			"type": "string"
 		},
-		"o": {
-			"description": "OutputPrefix; A prefix that is prepended to all output files (default = antsBTP).",
-			"type": "string",
-			"default": "antsBTP", 
+		"j": {
+			"default": "2",
+			"description": "Number of cpu cores to use locally for pexec option (default 2)",
+			"type": "string"
 		},
-		"r": {
-			"description": "Do rigid-body registration of inputs before creating template (default 0): 0 == off 1 == on. Only useful when you do not have an initial template",
-			"type": "string",
-			"default": "0", 
+		"k": {
+			"default": "1",
+			"description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components (-k 3).",
+			"type": "string"
 		},
 		"l": {
+			"default": "1",
 			"description": "Use linear image registration stages during the pairwise (template/subject) deformable registration.  Otherwise, registration is limited to SyN or B-spline SyN (see '-t' option).  This is '1' by default.",
-			"type": "string",
-			"default": "1", 
+			"type": "string"
 		},
 		"m": {
+			"default": "CC",
 			"description": "Type of similarity metric used for registration (default = CC):  Options are CC = cross-correlation, MI = mutual information, MSQ = mean square difference, DEMONS = demon's metric. A similarity metric per modality can be specified.  If the CC metric is chosen, one can also specify the radius in brackets, e.g. -m CC[ 4 ].",
-			"type": "string",
-			"default": "CC", 
+			"type": "string"
+		},
+		"n": {
+			"default": "1",
+			"description": "N4BiasFieldCorrection of moving image: 0 == off, 1 == on (default 1)",
+			"type": "string"
+		},
+		"o": {
+			"default": "antsBTP",
+			"description": "OutputPrefix; A prefix that is prepended to all output files (default = antsBTP).",
+			"type": "string"
+		},
+		"q": {
+			"default": "100x100x70x20",
+			"description": "Max iterations for each pairwise registration (default = 100x100x70x20):",
+			"type": "string"
+		},
+		"r": {
+			"default": "0",
+			"description": "Do rigid-body registration of inputs before creating template (default 0): 0 == off 1 == on. Only useful when you do not have an initial template",
+			"type": "string"
+		},
+		"s": {
+			"default": "3x2x1x0",
+			"description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations.  Needs to have the same number of components.",
+			"type": "string"
 		},
 		"t": {
+			"default": "SyN",
 			"description": "Type of transformation model used for registration (default = SyN):  Options are SyN = Greedy SyN, BSplineSyN = Greedy B-spline SyN, TimeVaryingVelocityField = Time-varying velocity field, TimeVaryingBSplineVelocityField = Time-varying B-spline velocity field, The transformations above are used after linear registration. To use use linear registration only: Affine = Rigid + Affine, Rigid = Rigid only.",
-			"type": "string",
-			"default": "SyN", 
+			"type": "string"
 		},
 		"u": {
+			"default": "20:00:00",
 			"description": "Walltime (default = 20:00:00):  Option for PBS/SLURM qsub specifying requested time per pairwise registration.",
-			"type": "string",
-			"default": "20:00:00", 
+			"type": "string"
 		},
 		"v": {
+			"default": "8gb",
 			"description": "Memory limit (default = 8gb):  Option for PBS/SLURM qsub specifying requested memory per pairwise registration.",
-			"type": "string",
-			"default": "8gb", 
+			"type": "string"
+		},
+		"w": {
+			"default": "1",
+			"description": "Modality weights used in the similarity metric (default = 1): specified as e.g. 1x0.5x0.75.",
+			"type": "string"
 		},
 		"y": {
+			"default": "1",
 			"description": "Update the template with the full affine transform (default 1). If 0, the rigid component of the affine transform will not be used to update the template. If your template drifts in translation or orientation try -y 0.",
-			"type": "string",
-			"default": "1", 
+			"type": "string"
 		}
 	},
 	"author": "Ozenc Taskin",

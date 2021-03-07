@@ -49,6 +49,9 @@ RUN apt-get upgrade -y
 RUN apt-get update -y
 RUN apt-get install python3 -y
 
+# copy new ants template script to the bin 
+COPY antsMultivariateTemplateConstruction2.sh /opt/ants/bin/antsMultivariateTemplateConstruction2.sh
+
 #Initialize flywheel v0 and move the required files into the container 
 ENV FLYWHEEL /flywheel/v0/
 RUN mkdir -p ${FLYWHEEL}

@@ -22,27 +22,26 @@ hcp_results = [ana for ana in analyses if ana.label.startswith('hcp-diff v0.1.5 
 
 # Set configs
 config = {'a': '1',
+          'A': '1',
           'b': '0',
           'd': '3',
           'e': '1',
           'f': '6x4x2x1',
           'g': '0.25',
           'i': '4',
-          'j': '6',
+          'j': '4',
           'k': '1',
           'l': '1',
           'm': 'CC',
           'n': '1',
           'o': 'TOME',
-          'q': '100x100x70x20',
-          'r': '0',
+          'q': '100x100x70x10',
+          'r': '1',
           's': '3x2x1x0',
           't': 'SyN',
-          'u': '20:00:00',
-          'v': '8gb',
           'w': '1',
           'y': '1',
-          'saveLogSeparately': '1'}
+          'saveLogSeparately': '0'}
 
 
 # Loop thorugh the subjects that have an hcp-diff run
@@ -75,7 +74,10 @@ for analysis in hcp_results:
                     if '.nii.gz' in mp.name:
                         value = mp
                         inputs[input_t1_key] = value
-
+    
+# Use TOME_3040 as the initial target
+inputs['aTargetImage'] = inputs['image27']
+    
 # Submit the gear  
 analysis_ids = []
 fails = []      

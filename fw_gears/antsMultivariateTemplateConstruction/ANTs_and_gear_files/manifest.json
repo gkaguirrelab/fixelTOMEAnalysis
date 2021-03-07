@@ -2,7 +2,7 @@
 	"name": "ants-multivariate-template-construction",
 	"label": "antsMultivariateTemplateConstruction: Make a template with ANTs multivariate template construction 2",
 	"description": "Please reference http://www.ncbi.nlm.nih.gov/pubmed/20851191 when employing this script in your studies. A reproducible evaluation of ANTs similarity metric performance in brain image registration. Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. Also see http://www.ncbi.nlm.nih.gov/pubmed/19818860 for more details. The script has been updated and improved since this publication.",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"inputs": {
 		"aTargetImage": {
 			"base": "file",
@@ -261,14 +261,14 @@
 		}
 	},
 	"config": {
-		"a": {
-			"default": "1",
-			"description": "image statistic used to summarize images (default 1). 0 = mean, 1 = mean of normalized intensities, 2 = median",
-			"type": "string"
-		},
 		"A": {
 			"default": "1",
 			"description": "sharpening applied to template at each iteration (default 1). 0 = none, 1 = Laplacian, 2 = unsharp mask",
+			"type": "string"
+		},
+		"a": {
+			"default": "1",
+			"description": "image statistic used to summarize images (default 1). 0 = mean, 1 = mean of normalized intensities, 2 = median",
 			"type": "string"
 		},
 		"b": {

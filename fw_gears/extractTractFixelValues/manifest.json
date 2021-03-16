@@ -2,7 +2,7 @@
 	"name": "extract-track-fixel-values",
 	"label": "extractTrackFixelValues: Extract fixel values from ROI tracks",
 	"description": "This gear does MRtrix fixel analysis on FOD images and extracts statistical values from ROI fibre tracks.",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"inputs": {
 		"fodImage01": {
 			"base": "file",
@@ -237,7 +237,7 @@
 		"leftROI": {
 			"base": "file",
 			"description": "Left hemisphere ROI track",
-			"optional": false
+			"optional": true
 		},
 		"maskImage01": {
 			"base": "file",

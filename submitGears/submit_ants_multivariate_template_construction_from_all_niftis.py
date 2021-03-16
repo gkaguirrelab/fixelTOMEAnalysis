@@ -47,15 +47,12 @@ config = {'a': '1',
 inputs = {}
 counter = 0
 acquisitions = fw.acquisitions.find('label=all_mprage_images') 
+save_destination = fw.get(acquisitions[0].session)
 for analysis in hcp_results:
     # Get session and subject name
     ses = fw.get(analysis.parent.id)
     subject_name = ses.subject.code
     print('Getting subject %s' % subject_name)
-    
-    # Set gear save destination to subject TOME_3045
-    if subject_name == 'TOME_3045':
-        save_destination = ses 
 
     # Set the input name and create a dictionary key for key/value input
     counter += 1

@@ -1,4 +1,4 @@
-#!/usr/bin/python3.5
+#!/anaconda3/bin/python3
 
 import os
 import json
@@ -64,7 +64,7 @@ unzipped_final_output = '/tmp/unzipped_final'
 os.system('mkdir %s' % unzipped_final_output)
 fixelAnalysis(mrtrix_path, first_output_dir, unzipped_final_output, fod_list, mask_list, template, left_roi, right_roi, fmls_peak_value, track_density_thresh, smooth_fixels)
 os.system('cd %s; zip -r %s cropped*' % (unzipped_final_output, os.path.join(final_output_dir, 'results.zip')))
-os.system('cd %s; cp fd_stats.txt fc_stats.txt log_fc_stats.txt fdc_stats.txt %s' % (unzipped_final_output, final_output_dir))
+os.system('cd %s; cp fd_stats.txt fc_stats.txt log_fc_stats.txt fdc_stats.txt fd_stats.csv fc_stats.csv log_fc_stats.csv fdc_stats.csv %s' % (unzipped_final_output, final_output_dir))
 
 # Save intermediate files if requested
 if save_intermediate_files == True:

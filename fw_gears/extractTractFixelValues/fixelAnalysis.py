@@ -1,5 +1,6 @@
 import os
 import subprocess
+import pandas as pd
 
 def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject_mask_list, wm_fod_template, left_track, right_track, fmls_peak_value='0.06', track_density_thresh='1', smooth_fixels=False):
     
@@ -159,14 +160,23 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     # Convert vtk to tck
     tractography_folder = os.path.join(workdir, 'tractography')
     os.system('mkdir %s' % tractography_folder)
-    left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
-    right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
-    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
-    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
+    if not left_track == 'NA': 
+        left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
+        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
+    if not left_track == 'NA':
+        right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
+        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
             
-    # Combine the tracks
-    left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
-    os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
+    # Combine the tracks if more than one exist 
+    if not left_track == 'NA' and not right_track == 'NA':
+        left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
+    elif not left_track == 'NA':
+        left_and_right_tck = left_track
+    elif not right_track == 'NA':
+        left_and_right_tck = right_track
+    else:
+        raise RuntimeError('You need to specify at least one track to extract values from')
     
     # Calculate fixel2fixel measurements and smooth fixel data if requested
     if smooth_fixels == True:
@@ -231,37 +241,59 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     else:
         raise RuntimeError('smooth_fixels option was set to something other than False or True')
          
-    # Extract FD, FC, log_FC and FDC stats from images and write them to a text file
+    # Extract FD, FC, log_FC and FDC stats from images and write them to a text file and create a pandas object for cvs save
     types = ['fd', 'fc', 'fdc', 'log_fc']
     for ty in types:
         text_file = open('%s' % os.path.join(output_folder, '%s_stats.txt' % ty), 'w')
         initial_txt = ''
+        pandasSubject = []
+        pandasMean = []
+        pandasMedian = []
+        pandasStd = []
+        pandasMax = []
+        pandasMin = []
+        fullPandasDict = {}
         for i in os.listdir(os.path.join(output_folder, 'cropped_%s' % ty)):
             if not i == 'index.mif' and not i =='directions.mif':
                 # Get image name and path
                 imname = i[:-4]
+                pandasSubject.append(imname)
                 impath = os.path.join(output_folder, 'cropped_%s' % ty, imname + '.mif')
                 # Add image name to the path
                 initial_txt = initial_txt + imname + ' \n\n'
                 # Add mean
                 mean_byte = subprocess.check_output("%s -output mean %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
                 mean_str = mean_byte.decode('utf-8')
+                pandasMean.append(float(mean_str))
                 initial_txt = initial_txt + 'mean ' + mean_str
                 # Add median
                 median_byte = subprocess.check_output("%s -output median %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
                 median_str = median_byte.decode('utf-8')
+                pandasMedian.append(float(median_str))
                 initial_txt = initial_txt + 'median ' + median_str            
                 # Add std
                 std_byte = subprocess.check_output("%s -output std %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
                 std_str = std_byte.decode('utf-8')
+                pandasStd.append(float(std_str))                
                 initial_txt = initial_txt + 'std ' + std_str                            
                 # Add min
                 min_byte = subprocess.check_output("%s -output min %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
                 min_str = min_byte.decode('utf-8')
+                pandasMin.append(float(min_str))   
                 initial_txt = initial_txt + 'min ' + min_str               
                 # Add max
                 max_byte = subprocess.check_output("%s -output max %s" % (os.path.join(mrtrix_path, 'mrstats'), impath), shell=True)
                 max_str = max_byte.decode('utf-8')
+                pandasMax.append(float(max_str)) 
                 initial_txt = initial_txt + 'max ' + max_str + '\n\n'   
+        fullPandasDict['subject'] = pandasSubject
+        fullPandasDict['mean'] = pandasMean
+        fullPandasDict['median'] = pandasMedian
+        fullPandasDict['std'] = pandasStd
+        fullPandasDict['max'] = pandasMax
+        fullPandasDict['min'] = pandasMin  
+        dataFrame = pd.DataFrame(fullPandasDict)
+        dataFrame.set_index('subject', inplace=True)
+        dataFrame.to_csv(os.path.join(output_folder, '%s_stats.csv' % ty))
         text_file.write(initial_txt)
         text_file.close()

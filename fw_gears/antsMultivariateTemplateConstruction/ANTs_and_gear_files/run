@@ -53,8 +53,8 @@ input_dir = '/tmp/input_images'
 os.system('mkdir %s' % input_dir)
 
 # Find the images and put the paths into fod/mask python lists
-for i in range(50):
-    image_number = i+1  
+for imagen in range(50):
+    image_number = imagen+1  
     if image_number < 10: 
         image_number_string = '0' + str(image_number)
     else:
@@ -75,14 +75,15 @@ os.system('cd; echo export ANTSPATH=/opt/ants/bin >>~/.profile')
 os.system('cd; echo export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1 >>~/.bashrc')
 
 if os.path.exists(z_path):
-    command = 'ANTSPATH=/opt/ants/bin; PATH=${ANTSPATH}:$PATH; /opt/ants/bin/antsMultivariateTemplateConstruction2.sh -d %s -c 2 -A %s -a %s -b %s -e %s -g %s -i %s -j %s \
+    command = 'ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1; ANTSPATH=/opt/ants/bin; PATH=${ANTSPATH}:$PATH; /opt/ants/bin/antsMultivariateTemplateConstruction2.sh -d %s -c 2 -A %s -a %s -b %s -e %s -g %s -i %s -j %s \
 -k %s -w %s -q %s -f %s -s %s -n %s -o %s -r %s -l %s -m %s -t %s -y %s -z %s %s' % (d,A,a,b,e,g,i,j,k,w,q,f,s,n,os.path.join(final_output_dir,o),
                                                                                                   r,l,m,t,y,z, os.path.join(input_dir, '*.nii.gz'))
 else:
-    command = 'ANTSPATH=/opt/ants/bin; PATH=${ANTSPATH}:$PATH; /opt/ants/bin/antsMultivariateTemplateConstruction2.sh -d %s -c 2 -A %s -a %s -b %s -e %s -g %s -i %s -j %s \
+    command = 'ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1; ANTSPATH=/opt/ants/bin; PATH=${ANTSPATH}:$PATH; /opt/ants/bin/antsMultivariateTemplateConstruction2.sh -d %s -c 2 -A %s -a %s -b %s -e %s -g %s -i %s -j %s \
 -k %s -w %s -q %s -f %s -s %s -n %s -o %s -r %s -l %s -m %s -t %s -y %s %s' % (d,A,a,b,e,g,i,j,k,w,q,f,s,n,os.path.join(final_output_dir,o),
                                                                                             r,l,m,t,y, os.path.join(input_dir, '*.nii.gz'))
 
+print(command)
 if saveLogSeparately == '1':
     os.system(command + '> %s/process.log' % final_output_dir)
 else:

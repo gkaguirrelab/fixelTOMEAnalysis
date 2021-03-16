@@ -24,7 +24,7 @@ hcp_results = [ana for ana in analyses if ana.label.startswith('createSubjectFOD
 config = {'fmls_peak_value': '0.06',
           'save_intermediate_files': True,
           'smooth_fixels': False,
-          'track_density_thresh': '1'}
+          'track_density_thresh': '2'}
 
 # Loop thorugh the subjects that have an hcp-diff run
 input_fod = {}
@@ -67,13 +67,13 @@ for i in tome_analyses:
         group_template_analysis = i
         group_template = group_template_analysis.get_file('FODtemplate.nii.gz')
         input_fod['fodTemplate'] = group_template    
-    elif 'Lefttrack' in i.label:
+    elif 'leftTemplateTrack' in i.label:
         left_roi_analysis = i
-        left_roi = left_roi_analysis.get_file('streamline.vtk')
+        left_roi = left_roi_analysis.get_file('leftTrack.vtk')
         input_fod['leftROI'] = left_roi
-    elif 'Righttrack' in i.label:
+    elif 'rightTemplateTrack' in i.label:
         right_roi_analysis = i
-        right_roi = right_roi_analysis.get_file('streamline.vtk')
+        right_roi = right_roi_analysis.get_file('rightTrack.vtk')
         input_fod['rightROI'] = right_roi    
         
 # Submit the gear  

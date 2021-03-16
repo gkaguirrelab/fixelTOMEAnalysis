@@ -53,9 +53,15 @@ for i in range(45):
 
 # Get the other input 
 left_roi_path = os.path.join(flywheel_base, 'input', 'leftROI')
-left_roi = os.path.join(left_roi_path, os.listdir(left_roi_path)[0])
+if os.path.exists(left_roi_path):
+    left_roi = os.path.join(left_roi_path, os.listdir(left_roi_path)[0])
+else:
+    left_roi = 'NA'
 right_roi_path = os.path.join(flywheel_base, 'input', 'rightROI')
-right_roi = os.path.join(right_roi_path, os.listdir(right_roi_path)[0])
+if os.path.exists(right_roi_path):
+    right_roi = os.path.join(right_roi_path, os.listdir(right_roi_path)[0])
+else:
+    right_roi = 'NA'
 template_path = os.path.join(flywheel_base, 'input', 'fodTemplate')
 template = os.path.join(template_path, os.listdir(template_path)[0])
 

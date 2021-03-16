@@ -160,14 +160,23 @@ def fixelAnalysis(mrtrix_path, workdir, output_folder, subject_fod_list, subject
     # Convert vtk to tck
     tractography_folder = os.path.join(workdir, 'tractography')
     os.system('mkdir %s' % tractography_folder)
-    left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
-    right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
-    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
-    os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
+    if not left_track == 'NA': 
+        left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
+        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
+    if not left_track == 'NA':
+        right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
+        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
             
-    # Combine the tracks
-    left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
-    os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
+    # Combine the tracks if more than one exist 
+    if not left_track == 'NA' and not right_track == 'NA':
+        left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
+        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
+    elif not left_track == 'NA':
+        left_and_right_tck = left_track
+    elif not right_track == 'NA':
+        left_and_right_tck = right_track
+    else:
+        raise RuntimeError('You need to specify at least one track to extract values from')
     
     # Calculate fixel2fixel measurements and smooth fixel data if requested
     if smooth_fixels == True:

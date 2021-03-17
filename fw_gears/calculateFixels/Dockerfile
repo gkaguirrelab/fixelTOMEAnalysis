@@ -8,9 +8,9 @@ MAINTAINER Ozzy(ozenctaskin@hotmail.com)
 ENV FLYWHEEL /flywheel/v0/
 RUN mkdir -p ${FLYWHEEL}
 COPY manifest.json run ${FLYWHEEL}
-COPY extract_fixel_values.py ${FLYWHEEL}/extract_fixel_values.py
+COPY fixelAnalysis.py ${FLYWHEEL}/fixelAnalysis.py
 RUN chmod +x /flywheel/v0/run
-RUN chmod +x ${FLYWHEEL}/extract_fixel_values.py
+RUN chmod +x ${FLYWHEEL}/fixelAnalysis.py
 
 # Install required packages     
 RUN apt-get update \
@@ -46,6 +46,3 @@ RUN conda update --all -y
 
 # Set the entrypoint  
 ENTRYPOINT /flywheel/v0/run
-
-
-

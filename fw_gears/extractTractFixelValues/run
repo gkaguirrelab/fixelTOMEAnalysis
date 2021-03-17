@@ -2,7 +2,7 @@
 
 import os
 import json
-from fixelAnalysis import fixelAnalysis
+from extract_fixel_values import extract_fixel_values
 
 # Print the system specs in the log file
 os.system('cat /proc/cpuinfo')
@@ -24,32 +24,10 @@ with open(config_path) as config_file:
     job_config = json.load(config_file)
 config = job_config['config']
 
-fmls_peak_value = config['fmls_peak_value']
-track_density_thresh = config['track_density_thresh']
-save_intermediate_files = config['save_intermediate_files']
 smooth_fixels = config['smooth_fixels']
+track_density_thresh = config['track_density_thresh']
 
 ################### Input Files ###############################################
-
-fod_list = []
-mask_list = []
-
-# Find the images and put the paths into fod/mask python lists
-for i in range(45):
-    image_number = i+1  
-    if image_number < 10: 
-        image_number_string = '0' + str(image_number)
-    else:
-        image_number_string = str(image_number)  
-   
-    image_path_and_name = os.path.join(flywheel_base, 'input', 'fodImage%s' % image_number_string) 
-    if os.path.exists(image_path_and_name):
-        image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
-        fod_list.append(image)
-    mask_path_and_name = os.path.join(flywheel_base, 'input', 'maskImage%s' % image_number_string) 
-    if os.path.exists(mask_path_and_name):    
-        mask = os.path.join(mask_path_and_name, os.listdir(mask_path_and_name)[0]) 
-        mask_list.append(mask)
 
 # Get the other input 
 left_roi_path = os.path.join(flywheel_base, 'input', 'leftROI')
@@ -62,16 +40,16 @@ if os.path.exists(right_roi_path):
     right_roi = os.path.join(right_roi_path, os.listdir(right_roi_path)[0])
 else:
     right_roi = 'NA'
-template_path = os.path.join(flywheel_base, 'input', 'fodTemplate')
-template = os.path.join(template_path, os.listdir(template_path)[0])
+    
+# Extract the calculateFixel output 
+calculateFixelResults_path = os.path.join(flywheel_base, 'input', 'calculateFixelResults')
+calculateFixelResults = os.path.join(calculateFixelResults_path, os.listdir(calculateFixelResults_path)[0])
+unzipped_results = '/tmp/unzipped_path'
+os.system('mkdir %s' % unzipped_results)
+os.system('unzip -q %s -d %s' % (calculateFixelResults, unzipped_results)) 
+input_folder = os.path.join(unzipped_results, os.listdir(unzipped_results)[0])
 
 #################### Run Func #################################################
-unzipped_final_output = '/tmp/unzipped_final'
-os.system('mkdir %s' % unzipped_final_output)
-fixelAnalysis(mrtrix_path, first_output_dir, unzipped_final_output, fod_list, mask_list, template, left_roi, right_roi, fmls_peak_value, track_density_thresh, smooth_fixels)
-os.system('cd %s; zip -r %s cropped*' % (unzipped_final_output, os.path.join(final_output_dir, 'results.zip')))
-os.system('cd %s; cp fd_stats.txt fc_stats.txt log_fc_stats.txt fdc_stats.txt fd_stats.csv fc_stats.csv log_fc_stats.csv fdc_stats.csv %s' % (unzipped_final_output, final_output_dir))
-
-# Save intermediate files if requested
-if save_intermediate_files == True:
-    os.system('cd %s; zip -r %s *' % (first_output_dir, os.path.join(final_output_dir, 'intermediate_files.zip')))
+extract_fixel_values(input_folder, mrtrix_path, first_output_dir, left_roi, right_roi, track_density_thresh=track_density_thresh, smooth_fixels=smooth_fixels)
+os.system('cd %s; zip -r %s cropped*' % (first_output_dir, os.path.join(final_output_dir, 'results.zip')))
+os.system('cd %s; cp fd_stats.csv fc_stats.csv log_fc_stats.csv fdc_stats.csv %s' % (first_output_dir, final_output_dir))

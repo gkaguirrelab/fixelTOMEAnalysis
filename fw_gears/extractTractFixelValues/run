@@ -51,5 +51,5 @@ input_folder = os.path.join(unzipped_results, os.listdir(unzipped_results)[0])
 
 #################### Run Func #################################################
 extract_fixel_values(input_folder, mrtrix_path, first_output_dir, left_roi, right_roi, track_density_thresh=track_density_thresh, smooth_fixels=smooth_fixels)
-os.system('cd %s; zip -r %s cropped*' % (first_output_dir, os.path.join(final_output_dir, 'results.zip')))
+os.system('cd %s; zip -r %s cropped*' % (first_output_dir, os.path.join(final_output_dir, 'cropped_results.zip')))
 os.system('cd %s; cp fd_stats.csv fc_stats.csv log_fc_stats.csv fdc_stats.csv %s' % (first_output_dir, final_output_dir))

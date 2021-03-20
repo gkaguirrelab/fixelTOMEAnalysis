@@ -2,7 +2,7 @@
 	"name": "extract-track-fixel-values",
 	"label": "extractTrackFixelValues: Extract fixel values from ROI tracks",
 	"description": "This gear does MRtrix fixel analysis on FOD images and extracts statistical values from ROI fibre tracks.",
-	"version": "0.1.6",
+	"version": "0.1.8",
 	"inputs": {
 		"calculateFixelResults": {
 			"base": "file",
@@ -38,7 +38,7 @@
 	"source": "https://www.mrtrix.org/",
 	"url": "https://github.com/gkaguirrelab/fixelTOMEAnalysis/fw_gears/makeFODTemplate",
 	"custom": {
-		"flywheel": {
+		"flywheel" : {
 			"suite": "GKAguirreLab"
 		},
 		"gear-builder": {

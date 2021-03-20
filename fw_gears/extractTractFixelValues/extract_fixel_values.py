@@ -2,7 +2,6 @@ import os, subprocess
 import pandas as pd
 
 def extract_fixel_values(input_dir, mrtrix_path, output_folder_path, left_track, right_track, track_density_thresh='1', smooth_fixels=False):
-   
     '''
     input_dir: fixelAnalysis script 
     mrtrix_path: Path to mrtrix bin. If you can call mrtrix functions from the terminal, you can leave this empty ''
@@ -23,7 +22,7 @@ def extract_fixel_values(input_dir, mrtrix_path, output_folder_path, left_track,
     if not left_track == 'NA': 
         left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
         os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
-    if not left_track == 'NA':
+    if not right_track == 'NA':
         right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
         os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
             
@@ -32,9 +31,9 @@ def extract_fixel_values(input_dir, mrtrix_path, output_folder_path, left_track,
         left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
         os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
     elif not left_track == 'NA':
-        left_and_right_tck = left_track
+        left_and_right_tck = left_track_tck
     elif not right_track == 'NA':
-        left_and_right_tck = right_track
+        left_and_right_tck = right_track_tck
     else:
         raise RuntimeError('You need to specify at least one track to extract values from')
     

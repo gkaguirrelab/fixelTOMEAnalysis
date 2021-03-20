@@ -1,0 +1,46 @@
+#!/usr/bin/python3.5
+
+import os
+import json
+from calculateAverageResponseFunction import calculateAverageResponseFunction
+
+# Print the system specs in the log file
+os.system('cat /proc/cpuinfo')
+
+# Set initial Flywheel paths
+flywheel_base ='/flywheel/v0/'
+manifest_file = os.path.join(flywheel_base, 'manifest.json')
+config_path = os.path.join(flywheel_base, 'config.json')
+first_output_dir = '/firstOutput' # Working in the flywheel output folder might cause issues so creating a first level output folder 
+os.system('mkdir %s'%first_output_dir)
+final_output_dir = os.path.join(flywheel_base, 'output')
+
+# Set paths to the tools 
+mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
+###################Parse Config Here###########################################
+
+with open(config_path) as config_file:
+    job_config = json.load(config_file)
+
+config = job_config['config']
+shell = config['shell']
+
+################### Input Files ###############################################
+
+fod_list = []
+
+for i in range(45):
+    image_number = i+1  
+    if image_number < 10: 
+        image_number_string = '0' + str(image_number)
+    else:
+        image_number_string = str(image_number)  
+
+    image_path_and_name = os.path.join(flywheel_base, 'input', 'fodImage%s' % image_number_string) 
+    if os.path.exists(image_path_and_name):
+        image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
+        fod_list.append(image)
+
+#################### Process #################################################
+
+calculateAverageResponseFunction(mrtrix_path, fod_list, first_output_dir, final_output_dir, shell)

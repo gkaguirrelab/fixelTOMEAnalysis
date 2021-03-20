@@ -1,0 +1,254 @@
+{
+	"name": "calculate-average-response-function",
+	"label": "calculateAverageResponseFunction: Calculate average response function from DWI images",
+	"description": "This gear creates single or multi shell average response functions from DWI images using Mrtrix dhollander or tournier methods. HCP-diff archives can also be used as inputs",
+	"version": "0.1.0",
+	"inputs": {
+		"fodImage01": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": false
+		},
+		"fodImage02": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage03": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage04": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage05": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage06": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage07": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage08": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage09": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage10": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage11": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage12": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage13": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage14": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage15": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage16": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage17": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage18": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage19": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage20": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage21": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage22": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage23": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage24": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage25": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage26": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage27": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage28": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage29": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage30": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage31": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage32": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage33": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage34": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage35": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage36": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage37": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage38": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage39": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage40": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage41": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage42": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage43": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage44": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		},
+		"fodImage45": {
+			"base": "file",
+			"description": "FOD image.",
+			"optional": true
+		}
+	},
+	"config": {
+		"shell": {
+			"default": "multi",
+			"description": "single or multi shell",
+			"type": "string"
+		}
+	},
+	"author": "MRtrix",
+	"maintainer": "Ozenc Taskin",
+	"license": "Other",
+	"source": "https://www.mrtrix.org/",
+	"url": "https://github.com/gkaguirrelab/fixelTOMEAnalysis/fw_gears/calculateAverageResponseFunction",
+	"custom": {
+		"flywheel": {
+			"suite": "GKAguirreLab"
+		},
+		"gear-builder": {
+			"category": "analysis",
+			"image": "gkaguirrelab/create-subject-fod-map:latest"
+		}
+	}
+}

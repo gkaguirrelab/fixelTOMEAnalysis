@@ -2,231 +2,231 @@
 	"name": "calculate-average-response-function",
 	"label": "calculateAverageResponseFunction: Calculate average response function from DWI images",
 	"description": "This gear creates single or multi shell average response functions from DWI images using Mrtrix dhollander or tournier methods. HCP-diff archives can also be used as inputs",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"inputs": {
-		"fodImage01": {
+		"dwiImage01": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": false
 		},
-		"fodImage02": {
+		"dwiImage02": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage03": {
+		"dwiImage03": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage04": {
+		"dwiImage04": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage05": {
+		"dwiImage05": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage06": {
+		"dwiImage06": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage07": {
+		"dwiImage07": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage08": {
+		"dwiImage08": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage09": {
+		"dwiImage09": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage10": {
+		"dwiImage10": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage11": {
+		"dwiImage11": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage12": {
+		"dwiImage12": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage13": {
+		"dwiImage13": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage14": {
+		"dwiImage14": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage15": {
+		"dwiImage15": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage16": {
+		"dwiImage16": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage17": {
+		"dwiImage17": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage18": {
+		"dwiImage18": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage19": {
+		"dwiImage19": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage20": {
+		"dwiImage20": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage21": {
+		"dwiImage21": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage22": {
+		"dwiImage22": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage23": {
+		"dwiImage23": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage24": {
+		"dwiImage24": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage25": {
+		"dwiImage25": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage26": {
+		"dwiImage26": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage27": {
+		"dwiImage27": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage28": {
+		"dwiImage28": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage29": {
+		"dwiImage29": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage30": {
+		"dwiImage30": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage31": {
+		"dwiImage31": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage32": {
+		"dwiImage32": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage33": {
+		"dwiImage33": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage34": {
+		"dwiImage34": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage35": {
+		"dwiImage35": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage36": {
+		"dwiImage36": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage37": {
+		"dwiImage37": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage38": {
+		"dwiImage38": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage39": {
+		"dwiImage39": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage40": {
+		"dwiImage40": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage41": {
+		"dwiImage41": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage42": {
+		"dwiImage42": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage43": {
+		"dwiImage43": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage44": {
+		"dwiImage44": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		},
-		"fodImage45": {
+		"dwiImage45": {
 			"base": "file",
-			"description": "FOD image.",
+			"description": "dwi image.",
 			"optional": true
 		}
 	},
@@ -237,7 +237,7 @@
 			"type": "string"
 		}
 	},
-	"author": "MRtrix",
+	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",
 	"license": "Other",
 	"source": "https://www.mrtrix.org/",
@@ -248,7 +248,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/create-subject-fod-map:latest"
+			"image": "gkaguirrelab/calculate-average-response-function:latest"
 		}
 	}
 }

@@ -1,4 +1,4 @@
-#!/usr/bin/python3.5
+#!/anaconda3/bin/python3
 
 import os
 import json
@@ -27,7 +27,9 @@ shell = config['shell']
 
 ################### Input Files ###############################################
 
-fod_list = []
+dwi_list = []
+bvec_list = []
+bval_list = []
 
 for i in range(45):
     image_number = i+1  
@@ -36,11 +38,23 @@ for i in range(45):
     else:
         image_number_string = str(image_number)  
 
-    image_path_and_name = os.path.join(flywheel_base, 'input', 'fodImage%s' % image_number_string) 
+    image_path_and_name = os.path.join(flywheel_base, 'input', 'dwiImage%s' % image_number_string) 
+    
     if os.path.exists(image_path_and_name):
-        image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
-        fod_list.append(image)
+        main_image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
+        if os.path.split(main_image)[1][-4:] == '.zip':
+            os.system('unzip -j %s */All_DTI_acqs/data/bvecs -d %s' % (main_image, image_path_and_name))
+            os.system('unzip -j %s */All_DTI_acqs/data/bvals -d %s' % (main_image, image_path_and_name))            
+            os.system('unzip -j %s */All_DTI_acqs/data/data.nii.gz -d %s' % (main_image, image_path_and_name))
+            data = os.path.join(image_path_and_name, 'data.nii.gz')
+            bval = os.path.join(image_path_and_name, 'bvals')
+            bvec = os.path.join(image_path_and_name,  'bvecs')                      
+            dwi_list.append(data)    
+            bvec_list.append(bvec)
+            bval_list.append(bval)       
+        else:
+            dwi_list.append(main_image)
 
 #################### Process #################################################
 
-calculateAverageResponseFunction(mrtrix_path, fod_list, first_output_dir, final_output_dir, shell)
+calculateAverageResponseFunction(mrtrix_path, dwi_list, bval_list, bvec_list, first_output_dir, final_output_dir, shell)

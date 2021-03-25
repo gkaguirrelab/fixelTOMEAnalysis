@@ -45,6 +45,11 @@ config = {'convexOpt-BValHighTHD': '3500',
           'method':'MRtrix sphericalDec',
           'mrTrix-lmax':'8,8,8'}
 
+# Get the response functions 
+wm = proj.get_file('group_average_response_wm.txt')
+gm = proj.get_file('group_average_response_gm.txt')
+csf = proj.get_file('group_average_response_csf.txt')
+
 analysis_ids = []
 fails = []
 for analysis in hcp_results:
@@ -52,7 +57,7 @@ for analysis in hcp_results:
     subject_name = ses.subject.code
     input_file = analysis.get_file('%s_All_DTI_acqs_hcpdiff.zip' % subject_name)
     
-    inputs = {'hcp_diff_archive': input_file}   
+    inputs = {'hcp_diff_archive': input_file, 'response_wm': wm, 'response_gm': gm, 'response_csf': csf}   
     print('submitting createSubjectFODMap for %s' % subject_name)
     try:
         _id = qp.run(analysis_label=analysis_label,

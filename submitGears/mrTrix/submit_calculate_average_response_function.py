@@ -49,6 +49,9 @@ for analysis in hcp_results:
     subject_name = ses.subject.code
     input_file = analysis.get_file('%s_All_DTI_acqs_hcpdiff.zip' % subject_name)
     
+    if subject_name == 'TOME_3045':
+        save_destination = ses
+    
     if image_number < 10: 
         image_number_string = '0' + str(image_number)
     else:
@@ -59,7 +62,7 @@ for analysis in hcp_results:
 print('submitting calculate-response-function')
 try:
     _id = qp.run(analysis_label=analysis_label,
-                  config=config, inputs=inputs, destination=save_destination)
+                  config=config, inputs=inputs, destination=save_destination, tags=['vm-n1-highmem-8_disk-1500G_swap-60G'])
     analysis_ids.append(_id)
 except Exception as e:
     print(e)

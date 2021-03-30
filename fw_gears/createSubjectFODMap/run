@@ -119,5 +119,14 @@ elif method == 'Adaptive Convex Optimization (Tran and Shi, 2015)':
     os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), merged_fod_nifti, merged_fod_mif))
     os.system('%s %s %s' % (os.path.join(mrtrix_path, 'mrconvert'), merged_tissue_map_nifti, merged_tissue_map_mif))
 
+elif method == 'DTI metrics':
+    # Resample DWI images
+    upscaled_dwi = os.path.join(first_output_dir, 'upscaled_dwi.nii.gz')
+    upscaled_mask = os.path.join(first_output_dir, 'upscaled_mask.nii.gz')
+    os.system('%s %s regrid -vox 1.25 %s' % (os.path.join(mrtrix_path, 'mrgrid'), dwi_image, upscaled_dwi))
+    os.system('%s %s regrid -vox 1.25 %s' % (os.path.join(mrtrix_path, 'mrgrid'), mask_image, upscaled_mask)) 
+    os.system('%s -k %s -o %s -m %s -r %s -b %s --verbose' % (os.path.join(fsl_path, 'dtifit'), upscaled_dwi,
+                                                              os.path.join(final_output_dir, subject_id), upscaled_mask,
+                                                              bvecs, bvals))
 else:
     print('Method unrecognized')

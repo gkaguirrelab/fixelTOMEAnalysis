@@ -51,12 +51,12 @@ def extract_dti_values(fa_image, other_metrics, workdir, output_folder_path, lef
     os.system('%s %s -abs %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_map, 
                                     track_density_thresh, thresholded_track))
     
-    # Binarize the thresholded map
+    # Binarize the thresholded track density map
     binary_track_mask = os.path.join(workdir, 'binary_mask.nii.gz')
     os.system('%s --i %s --min %s --o %s' % (os.path.join(freesurfer_path, 'mri_binarize'), thresholded_track,
                                              binary_threshold, binary_track_mask))
     
-    # Warp the track    
+    # Warp the image which the track was based on and warp it to the target    
     warp_workdir = os.path.join(workdir, 'warp_workdir')
     os.system('mkdir %s' % warp_workdir)
     output_name = os.path.join(warp_workdir, 'tckmap2fod')
@@ -81,7 +81,7 @@ def extract_dti_values(fa_image, other_metrics, workdir, output_folder_path, lef
     
     os.system(command)
     
-    # Move the track to the dti space
+    # Move the track to the target dti space
     binary_track_mask_warped = os.path.join(workdir, 'binary_mask_warped.nii.gz')
     os.system('%s -d 3 -i %s -r %s -o %s -t %s -t %s' % (os.path.join(ants_path, 'applyApplyTransforms'),
                                                          binary_track_mask, fa_image, binary_track_mask_warped,
@@ -94,8 +94,7 @@ def extract_dti_values(fa_image, other_metrics, workdir, output_folder_path, lef
     os.system('mkdir %s' % FA_folder)
     extracted_fa_track = os.path.join(FA_folder, 'FA.nii.gz')
     os.system('%s %s %s %s' % (os.path.join(freesurfer_path, 'mri_mask'),
-                               fa_image, binary_track_mask_warped, extracted_fa_track))
-    
+                               fa_image, binary_track_mask_warped, extracted_fa_track))    
     for i in other_metrics:
         metric_name = os.path.split(i)[1][-9:-7]
         metric_folder = os.path.join(subject_folder, metric_name)

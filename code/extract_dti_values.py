@@ -90,20 +90,20 @@ def extract_dti_values(metric_images, workdir, output_folder_path, left_track, r
 --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox --transform SyN[ 0.1,3,0 ] \
 --metric CC[ %s,%s,1,4 ] --convergence [ 100x70x50x20,1e-6,10 ] \
 --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox' % (os.path.join(ants_path, 'antsRegistration'),
-                                                           output_name, output_warped, 
-                                                           output_inverse_warped, subj, 
-                                                           extracted_template, subj, 
-                                                           extracted_template, subj, 
-                                                           extracted_template, subj,
-                                                           extracted_template)
+                                                            output_name, output_warped, 
+                                                            output_inverse_warped, subj, 
+                                                            extracted_template, subj, 
+                                                            extracted_template, subj, 
+                                                            extracted_template, subj,
+                                                            extracted_template)
         
-        os.system(command)
+        # os.system(command)
         
         # Move the track to the target dti space
         binary_track_mask_warped = os.path.join(workdir, 'binary_mask_warped.nii.gz')
         os.system('%s -d 3 -i %s -r %s -o %s -n NearestNeighbor -t [ %s, 1 ] -t %s' % (os.path.join(ants_path, 'antsApplyTransforms'),
-                                                                                       thresholded_track, subj, binary_track_mask_warped,
-                                                                                       output_affine, output_inverse_warped))
+                                                                                        thresholded_track, subj, binary_track_mask_warped,
+                                                                                        output_affine, output_inverse_warped))
         
         # Extract the tracks from the metric
         extracted_metric_image = os.path.join(workdir, '%s_%s_extracted.nii.gz' % (subject_id, metric_name))
@@ -125,6 +125,7 @@ def extract_dti_values(metric_images, workdir, output_folder_path, left_track, r
         
         min_max_raw = subprocess.check_output(['%s' % os.path.join(fslpath, 'fslstats'), '%s' % extracted_metric_image, '-R'])
         min_max_list = min_max_raw.decode('utf-8')
+        min_max_list = min_max_list.split()
         minimum = float(min_max_list[0])
         maximum = float(min_max_list[1])
         pandasMax.append(maximum)
@@ -138,13 +139,6 @@ def extract_dti_values(metric_images, workdir, output_folder_path, left_track, r
     fullPandasDict['min'] = pandasMin  
     dataFrame = pd.DataFrame(fullPandasDict)
     dataFrame.set_index('subject', inplace=True)
-    dataFrame.to_csv(os.path.join(output_folder_path, '%s_stats.csv' % metric_name))        
-    
-        
-        
-        
-        
-        
-        
+    dataFrame.to_csv(os.path.join(output_folder_path, '%s_stats.csv' % metric_name))   
         
         

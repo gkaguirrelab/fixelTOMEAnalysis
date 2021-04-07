@@ -1,0 +1,279 @@
+{
+	"name": "extract-track-dti-values",
+	"label": "extractTrackdtiValues: Extract dti values from ROI tracks",
+	"description": "This gear extreacts track values from dti metric maps",
+	"version": "0.1.0",
+	"inputs": {
+		"dtiImage01": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": false
+		},
+		"dtiImage02": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage03": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage04": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage05": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage06": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage07": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage08": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage09": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage10": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage11": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage12": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage13": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage14": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage15": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage16": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage17": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage18": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage19": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage20": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage21": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage22": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage23": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage24": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage25": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage26": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage27": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage28": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage29": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage30": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage31": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage32": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage33": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage34": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage35": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage36": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage37": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage38": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage39": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage40": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage41": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage42": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage43": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage44": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"dtiImage45": {
+			"base": "file",
+			"description": "dti image.",
+			"optional": true
+		},
+		"rightROI": {
+			"base": "file",
+			"description": "right hemisphere track",
+			"optional": true
+		},
+		"leftROI": {
+			"base": "file",
+			"description": "left hemisphere track",
+			"optional": true
+		},
+		"warpArchive": {
+			"base": "archive",
+			"description": "If you ru this gear with the same subjects (e.g for different dti metrics), you can pass the warp folder to skip the registration",
+			"optional": true
+		},
+		"template": {
+			"base": "file",
+			"description": "Template image the ROIs were based on.",
+			"optional": true
+		}
+	},
+	"config": {
+		"save_warp_archive": {
+			"description": "Output warp archive to be used if this gear is run more than once for the same subjects (e.g for different metrics). Pass this to warp_archive in inputs",
+			"type": "boolean",
+			"default": true
+		},
+		"track_density_thresh": {
+			"description": "This decides which voxels will be selected based on the number of tracks passing through it",
+			"type": "string",
+			"default": '1'
+		}
+    },
+	"author": "Ozenc Taskin",
+	"maintainer": "Ozenc Taskin",
+	"license": "Other",
+	"source": "https://www.mrtrix.org/",
+	"url": "https://github.com/gkaguirrelab/fixelTOMEAnalysis/fw_gears/makedtiTemplate",
+	"custom": {
+		"flywheel" : {
+			"suite": "GKAguirreLab"
+		},
+		"gear-builder": {
+			"category": "analysis",
+			"image": "gkaguirrelab/extract-tract-fixel-values:latest"
+		}
+	}
+}

@@ -1,0 +1,80 @@
+#!/anaconda3/bin/python3
+
+import os
+import json
+from extract_dti_values import extract_dti_values
+
+# Print the system specs in the log file
+os.system('cat /proc/cpuinfo')
+
+# Set initial Flywheel paths
+flywheel_base ='/flywheel/v0/'
+manifest_file = os.path.join(flywheel_base, 'manifest.json')
+config_path = os.path.join(flywheel_base, 'config.json')
+first_output_dir = '/firstOutput' # Working in the flywheel output folder might cause issues so creating a first level output folder 
+os.system('mkdir %s'%first_output_dir)
+final_output_dir = os.path.join(flywheel_base, 'output')
+
+# Set paths to the tools 
+mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
+fsl_path = 'FSLDIR=/fsl/;. ${FSLDIR}/etc/fslconf/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/bin/'
+freesurfer_path = '/freesurfer'
+
+###################Parse Config Here###########################################
+
+with open(config_path) as config_file:
+    job_config = json.load(config_file)
+config = job_config['config']
+
+save_warp_archive = config['save_warp_archive']
+track_density_thresh = config['track_density_thresh']
+
+################### Input Files ###############################################
+
+# Get the other input 
+left_roi_path = os.path.join(flywheel_base, 'input', 'leftROI')
+if os.path.exists(left_roi_path):
+    left_roi = os.path.join(left_roi_path, os.listdir(left_roi_path)[0])
+else:
+    left_roi = 'NA'
+right_roi_path = os.path.join(flywheel_base, 'input', 'rightROI')
+if os.path.exists(right_roi_path):
+    right_roi = os.path.join(right_roi_path, os.listdir(right_roi_path)[0])
+else:
+    right_roi = 'NA'
+    
+# Extract the wrp folder if exists 
+warpArchive_path = os.path.join(flywheel_base, 'input', 'warpArchive')
+if os.path.exists(warpArchive_path):
+    warpArchive = os.path.join(warpArchive_path, os.listdir(warpArchive_path)[0])
+    unzipped_results = '/tmp/unzipped_path'
+    os.system('mkdir %s' % unzipped_results)
+    os.system('unzip -q %s -d %s' % (warpArchive, unzipped_results)) 
+    warp_folder = os.path.join(unzipped_results, os.listdir(unzipped_results)[0])
+else:
+    warp_folder = ''
+
+# Get the DWI images
+metric_images = []
+for i in range(45):
+    image_number = i+1  
+    if image_number < 10: 
+        image_number_string = '0' + str(image_number)
+    else:
+        image_number_string = str(image_number)  
+
+    image_path_and_name = os.path.join(flywheel_base, 'input', 'dtiImage%s' % image_number_string) 
+    main_image = os.path.join(image_path_and_name, os.listdir(image_path_and_name)[0])
+    
+    metric_images.append(main_image)
+
+# Get the template image
+template_image_path = os.path.join(flywheel_base, 'input', 'template')        
+template_image = os.path.join(template_image_path, os.listdir(template_image_path)[0])
+
+#################### Run Func #################################################
+warp_dir = extract_dti_values(metric_images, first_output_dir, final_output_dir, left_roi, right_roi, template_image, warpfolder=warp_folder, mrtrix_path=mrtrix_path, freesurfer_path=freesurfer_path, ants_path='', fslpath=fsl_path, track_density_thresh=track_density_thresh)
+
+if save_warp_archive == True:
+    os.system('cd %s; zip -r %s *' % (warp_dir, os.path.join(final_output_dir, 'subject_warps.zip')))
+

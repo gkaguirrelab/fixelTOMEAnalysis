@@ -53,7 +53,7 @@ if os.path.exists(warpArchive_path):
     os.system('mkdir %s' % unzipped_results)
     os.system('unzip %s -d %s' % (warpArchive, unzipped_results)) 
 else:
-    warp_folder = ''
+    unzipped_results = ''
 
 # Get the DWI images
 metric_images = []

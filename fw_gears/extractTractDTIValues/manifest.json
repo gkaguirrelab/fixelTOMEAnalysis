@@ -229,51 +229,56 @@
 			"description": "dti image.",
 			"optional": true
 		},
-		"rightROI": {
-			"base": "file",
-			"description": "right hemisphere track",
-			"optional": true
-		},
-		"leftROI": {
+		"ROIOne": {
 			"base": "file",
 			"description": "left hemisphere track",
-			"optional": true
+			"optional": false
 		},
-		"warpArchive": {
-			"base": "archive",
-			"description": "If you ru this gear with the same subjects (e.g for different dti metrics), you can pass the warp folder to skip the registration",
+		"ROITwo": {
+			"base": "file",
+			"description": "right hemisphere track",
 			"optional": true
 		},
 		"template": {
 			"base": "file",
 			"description": "Template image the ROIs were based on.",
+			"optional": false
+		},
+		"warpArchive": {
+			"base": "file",
+			"description": "If you ru this gear with the same subjects (e.g for different dti metrics), you can pass the warp folder to skip the registration",
 			"optional": true
 		}
 	},
 	"config": {
 		"save_warp_archive": {
+			"default": true,
 			"description": "Output warp archive to be used if this gear is run more than once for the same subjects (e.g for different metrics). Pass this to warp_archive in inputs",
-			"type": "boolean",
-			"default": true
+			"type": "boolean"
 		},
 		"track_density_thresh": {
+			"default": "1",
 			"description": "This decides which voxels will be selected based on the number of tracks passing through it",
-			"type": "string",
-			"default": '1'
+			"type": "string"
+		},
+		"n_threads": {
+			"default": "2",
+			"description": "Number of threads to use",
+			"type": "string"
 		}
-    },
+	},
 	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",
 	"license": "Other",
 	"source": "https://www.mrtrix.org/",
 	"url": "https://github.com/gkaguirrelab/fixelTOMEAnalysis/fw_gears/makedtiTemplate",
 	"custom": {
-		"flywheel" : {
+		"flywheel": {
 			"suite": "GKAguirreLab"
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/extract-tract-fixel-values:latest"
+			"image": "gkaguirrelab/extract-tract-dti-values:latest"
 		}
 	}
 }

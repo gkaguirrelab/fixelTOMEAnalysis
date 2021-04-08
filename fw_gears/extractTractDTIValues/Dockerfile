@@ -19,6 +19,7 @@ RUN apt-get update \
     software-properties-common
 RUN apt-get install -y \
     git \
+    wget \
     g++ \ 
     python \
     python-pip \

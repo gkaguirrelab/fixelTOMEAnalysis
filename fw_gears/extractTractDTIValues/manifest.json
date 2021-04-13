@@ -2,7 +2,7 @@
 	"name": "extract-track-dti-values",
 	"label": "extractTrackdtiValues: Extract dti values from ROI tracks",
 	"description": "This gear extreacts track values from dti metric maps",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"inputs": {
 		"dtiImage01": {
 			"base": "file",
@@ -232,7 +232,7 @@
 		"ROIOne": {
 			"base": "file",
 			"description": "left hemisphere track",
-			"optional": false
+			"optional": true
 		},
 		"ROITwo": {
 			"base": "file",

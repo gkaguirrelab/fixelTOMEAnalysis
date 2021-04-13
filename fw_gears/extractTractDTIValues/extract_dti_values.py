@@ -82,17 +82,19 @@ def extract_dti_values(metric_images, workdir, output_folder_path, left_track, r
     elif not right_track == 'NA':
         left_and_right_tck = right_track_tck
     else:
-        raise RuntimeError('You need to specify at least one track to extract values from')
+        left_and_right_tck = 'NA'
     
     # Calculate track density map    
-    track_density_map = os.path.join(tractography_folder, 'track_density_map.nii.gz')
-    os.system('%s %s %s -template %s' % (os.path.join(mrtrix_path, 'tckmap'), left_and_right_tck, 
-                                          track_density_map, tckmap_template))
+    if not left_and_right_tck == 'NA':
+        track_density_map = os.path.join(tractography_folder, 'track_density_map.nii.gz')
+        os.system('%s %s %s -template %s' % (os.path.join(mrtrix_path, 'tckmap'), left_and_right_tck, 
+                                             track_density_map, tckmap_template))
     
     # Threshold the track density map
-    thresholded_track = os.path.join(tractography_folder, 'thresholded.nii.gz')
-    os.system('%s %s -abs %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_map, 
-                                    track_density_thresh, thresholded_track))
+    if not left_and_right_tck == 'NA':
+        thresholded_track = os.path.join(tractography_folder, 'thresholded.nii.gz')
+        os.system('%s %s -abs %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_map, 
+                                        track_density_thresh, thresholded_track))
     
     # Initiate pandas object
     pandasSubject = []
@@ -130,68 +132,96 @@ def extract_dti_values(metric_images, workdir, output_folder_path, left_track, r
 
         # Get subject name and metric name
         subject_id = os.path.split(subj)[1][:-10]
-        pandasSubject.append(subject_id)
+        pandasSubject.append(subject_id)        
         
-        # Warp the image which the track was based on and warp it to the target   
-        if warpfolder == '':
-            output_name = os.path.join(warp_workdir, 'tckmap2%s' % subject_id)
-            output_warped = os.path.join(warp_workdir, 'tckmap2%sWarped.nii.gz' % subject_id)
-            output_inverse_warped = os.path.join(warp_workdir, 'tckmap2%sInverseWarped.nii.gz' % subject_id)   
-            output_inverse_warp = os.path.join(warp_workdir, 'tckmap2%s1InverseWarp.nii.gz' % subject_id)   
-            output_warp = os.path.join(warp_workdir, 'tckmap2%s1Warp.nii.gz' % subject_id)
-            output_affine = os.path.join(warp_workdir, 'tckmap2%s0GenericAffine.mat' % subject_id)
-        else:
-            output_warped = os.path.join(warpfolder, 'tckmap2%sWarped.nii.gz' % subject_id)
-            output_inverse_warped = os.path.join(warpfolder, 'tckmap2%sInverseWarped.nii.gz' % subject_id)   
-            output_inverse_warp = os.path.join(warpfolder, 'tckmap2%s1InverseWarp.nii.gz' % subject_id)   
-            output_warp = os.path.join(warpfolder, 'tckmap2%s1Warp.nii.gz' % subject_id)
-            output_affine = os.path.join(warpfolder, 'tckmap2%s0GenericAffine.mat' % subject_id)            
+        if not left_track == 'NA' and right_track == 'NA':
             
-        if warpfolder == '':
-            command = 'ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=%s; %s --verbose 1 --dimensionality 3 --float 0 --collapse-output-transforms 1 \
---output [ %s,%s,%s ] --interpolation Linear --use-histogram-matching 0 \
---winsorize-image-intensities [ 0.005,0.995 ] --initial-moving-transform [ %s,%s,1 ] \
---transform Rigid[ 0.1 ] --metric MI[ %s,%s,1,32,Regular,0.25 ] \
---convergence [ 1000x500x250x100,1e-6,10 ] --shrink-factors 8x4x2x1 \
---smoothing-sigmas 3x2x1x0vox --transform Affine[ 0.1 ] \
---metric MI[ %s,%s,1,32,Regular,0.25 ] --convergence [ 1000x500x250x100,1e-6,10 ] \
---shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox --transform SyN[ 0.1,3,0 ] \
---metric CC[ %s,%s,1,4 ] --convergence [ 100x70x50x20,1e-6,10 ] \
---shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox' % (n_threads, os.path.join(ants_path, 'antsRegistration'),
-                                                            output_name, output_warped, 
-                                                            output_inverse_warped, subj, 
-                                                            extracted_template, subj, 
-                                                            extracted_template, subj, 
-                                                            extracted_template, subj,
-                                                            extracted_template)
-        
-            os.system(command)
-
-        # Make template image
-        input_img = nib.load(subj)
-        input_img_data = input_img.get_fdata()
-        x = int(len(input_img_data[:,1,1])/2)
-        y = int(len(input_img_data[1,:,1])/2)
-        z = int(len(input_img_data[1,1,:])/2)
-        
-        subject_image_folder = os.path.join(image_folder, subject_id)
-        os.system('mkdir %s' % subject_image_folder)
-        make_plot('template', output_warped, 'NA', 'Template warped to %s' % subject_id, 'warped_template_%s.png' % subject_id, x, y, z, [1, 1, 1, 1, 1, 1], subject_image_folder)
-        make_plot('template', subj, 'NA', 'Template warped to %s' % subject_id, 'subject_image_%s.png' % subject_id, x, y, z, [1, 1, 1, 1, 1, 1], subject_image_folder)
-        
-        make_gif(subject_image_folder, subject_id, gif_folder)
-        html_content = html_content + '<h1>Surface</h1>\n<img src="./gifs/%s" style="float: left; width: 30%%; margin-right: 1%%; margin-bottom: 0.5em;" alt="%s">\n<p style="clear: both;">\n' % (subject_id + '.gif', subject_id)
+            # Warp the image which the track was based on and warp it to the target   
+            if warpfolder == '':
+                output_name = os.path.join(warp_workdir, 'tckmap2%s' % subject_id)
+                output_warped = os.path.join(warp_workdir, 'tckmap2%sWarped.nii.gz' % subject_id)
+                output_inverse_warped = os.path.join(warp_workdir, 'tckmap2%sInverseWarped.nii.gz' % subject_id)   
+                output_inverse_warp = os.path.join(warp_workdir, 'tckmap2%s1InverseWarp.nii.gz' % subject_id)   
+                output_warp = os.path.join(warp_workdir, 'tckmap2%s1Warp.nii.gz' % subject_id)
+                output_affine = os.path.join(warp_workdir, 'tckmap2%s0GenericAffine.mat' % subject_id)
+            elif os.path.exists(os.path.join(warpfolder, 'tckmap2%sWarped.nii.gz' % subject_id)):
+                output_warped = os.path.join(warpfolder, 'tckmap2%sWarped.nii.gz' % subject_id)
+                output_inverse_warped = os.path.join(warpfolder, 'tckmap2%sInverseWarped.nii.gz' % subject_id)   
+                output_inverse_warp = os.path.join(warpfolder, 'tckmap2%s1InverseWarp.nii.gz' % subject_id)   
+                output_warp = os.path.join(warpfolder, 'tckmap2%s1Warp.nii.gz' % subject_id)
+                output_affine = os.path.join(warpfolder, 'tckmap2%s0GenericAffine.mat' % subject_id)            
+            elif os.path.exists(os.path.join(warpfolder, 'subjects', 'preproc_wm_fod_%s' % subject_id)):
+                output_warp = os.path.join(warpfolder, 'subjects', 'preproc_wm_fod_%s' % subject_id,'warp_calculations','template2subject_warp.mif')
+                output_warped = os.path.join(warpfolder, 'tckmap2%sWarped.nii.gz' % subject_id)
+            else:
+                raise RuntimeError('Input warp folder is not recognized. Either use the warp folder created by the extractDTI gear or fixel calculation gear')
+                 
+                
+            if warpfolder == '':
+                command = 'ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=%s; %s --verbose 1 --dimensionality 3 --float 0 --collapse-output-transforms 1 \
+    --output [ %s,%s,%s ] --interpolation Linear --use-histogram-matching 0 \
+    --winsorize-image-intensities [ 0.005,0.995 ] --initial-moving-transform [ %s,%s,1 ] \
+    --transform Rigid[ 0.1 ] --metric MI[ %s,%s,1,32,Regular,0.25 ] \
+    --convergence [ 1000x500x250x100,1e-6,10 ] --shrink-factors 8x4x2x1 \
+    --smoothing-sigmas 3x2x1x0vox --transform Affine[ 0.1 ] \
+    --metric MI[ %s,%s,1,32,Regular,0.25 ] --convergence [ 1000x500x250x100,1e-6,10 ] \
+    --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox --transform SyN[ 0.1,3,0 ] \
+    --metric CC[ %s,%s,1,4 ] --convergence [ 100x70x50x20,1e-6,10 ] \
+    --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox' % (n_threads, os.path.join(ants_path, 'antsRegistration'),
+                                                                output_name, output_warped, 
+                                                                output_inverse_warped, subj, 
+                                                                extracted_template, subj, 
+                                                                extracted_template, subj, 
+                                                                extracted_template, subj,
+                                                                extracted_template)
+            
+                os.system(command)
+    
+            # Move the track to the target dti space
+            tracks_in_subject_space = os.path.join(warp_workdir, 'tracks_in_subject_space')
+            if not os.path.exists(tracks_in_subject_space):
+                os.system('mkdir %s' % tracks_in_subject_space)
+            binary_track_mask_warped = os.path.join(tracks_in_subject_space, '%s_binary_mask_warped.nii.gz' % subject_id)       
+            if warpfolder =='' or os.path.exists(os.path.join(warpfolder, 'tckmap2%sWarped.nii.gz' % subject_id)):
+                os.system('%s -d 3 -i %s -r %s -o %s -n NearestNeighbor -t %s -t [ %s, 0 ]' % (os.path.join(ants_path, 'antsApplyTransforms'),
+                                                                                                thresholded_track, subj, binary_track_mask_warped,
+                                                                                                output_warp, output_affine))
+                
+                os.system('%s -d 3 -i %s -r %s -o %s -t %s -t [ %s, 0 ]' % (os.path.join(ants_path, 'antsApplyTransforms'),
+                                                                            extracted_template, subj, output_warped,
+                                                                            output_warp, output_affine))
+            else:
+                os.system('%s %s -warp %s -interp nearest -reorient_fod no %s' % (os.path.join(mrtrix_path, 'mrtransform'),
+                                                                                  thresholded_track, output_warp, binary_track_mask_warped))
                
-        # Move the track to the target dti space
-        binary_track_mask_warped = os.path.join(warp_workdir, 'binary_mask_warped.nii.gz')
-        os.system('%s -d 3 -i %s -r %s -o %s -n NearestNeighbor -t [ %s, 1 ] -t %s' % (os.path.join(ants_path, 'antsApplyTransforms'),
-                                                                                        thresholded_track, subj, binary_track_mask_warped,
-                                                                                        output_affine, output_inverse_warped))
-        
-        # Extract the tracks from the metric
-        extracted_metric_image = os.path.join(warp_workdir, '%s_%s_extracted.nii.gz' % (subject_id, metric_name))
-        os.system('%s %s -mas %s %s' % (os.path.join(fslpath, 'fslmaths'),
-                                        subj, binary_track_mask_warped, extracted_metric_image))
+                os.system('%s %s -warp %s -interp linear -reorient_fod no %s' % (os.path.join(mrtrix_path, 'mrtransform'),
+                                                                                  extracted_template, output_warp, output_warped))
+            # Make template image
+            input_img = nib.load(subj)
+            input_img_data = input_img.get_fdata()
+            x = int(len(input_img_data[:,1,1])/2)
+            y = int(len(input_img_data[1,:,1])/2)
+            z = int(len(input_img_data[1,1,:])/2)
+            
+            subject_image_folder = os.path.join(image_folder, subject_id)
+            if not os.path.exists(subject_image_folder):
+                os.system('mkdir %s' % subject_image_folder)
+            make_plot('template', output_warped, 'NA', 'Template warped to %s' % subject_id, 'warped_template_%s.png' % subject_id, x, y, z, [1, 1, 1, 1, 1, 1], subject_image_folder)
+            make_plot('template', subj, 'NA', 'Template warped to %s' % subject_id, 'subject_image_%s.png' % subject_id, x, y, z, [1, 1, 1, 1, 1, 1], subject_image_folder)
+            
+            make_gif(subject_image_folder, subject_id, gif_folder)
+            html_content = html_content + '<h1>Surface</h1>\n<img src="./gifs/%s" style="float: left; width: 30%%; margin-right: 1%%; margin-bottom: 0.5em;" alt="%s">\n<p style="clear: both;">\n' % (subject_id + '.gif', subject_id)
+                       
+            # Extract the tracks from the metric
+            extracted_subject_images = os.path.join(warp_workdir, 'extracted_subject_images')
+            if not os.path.exists(extracted_subject_images):
+                os.system('mkdir %s' % extracted_subject_images)
+            extracted_metric_image = os.path.join(extracted_subject_images, '%s_%s_extracted.nii.gz' % (subject_id, metric_name))
+            os.system('%s %s -mas %s %s' % (os.path.join(fslpath, 'fslmaths'),
+                                            subj, binary_track_mask_warped, extracted_metric_image))
+
+        else:
+            extracted_metric_image = subj
         
         # Get the mean, median, std, max, min
         mean_raw = os.popen('%s %s -M' % (os.path.join(fslpath, 'fslstats'), extracted_metric_image)).read()

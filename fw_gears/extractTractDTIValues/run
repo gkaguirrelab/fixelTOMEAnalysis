@@ -51,7 +51,10 @@ if os.path.exists(warpArchive_path):
     warpArchive = os.path.join(warpArchive_path, os.listdir(warpArchive_path)[0])
     unzipped_results = '/tmp/unzipped_path'
     os.system('mkdir %s' % unzipped_results)
-    os.system('unzip %s -d %s' % (warpArchive, unzipped_results)) 
+    if os.listdir(warpArchive_path)[0] == 'subject_warps.zip':
+        os.system('unzip -q %s -d %s' % (warpArchive, unzipped_results)) 
+    else:
+        os.system('unzip -q %s subjects/*/warp_calculations/template2subject_warp.mif -d %s' % (warpArchive, unzipped_results))         
 else:
     unzipped_results = ''
 
@@ -78,5 +81,6 @@ if os.path.exists(template_image_path):
 warp_dir = extract_dti_values(metric_images, first_output_dir, final_output_dir, left_roi, right_roi, template_image, n_threads=n_threads, warpfolder=unzipped_results, mrtrix_path=mrtrix_path, freesurfer_path=freesurfer_path, ants_path='', fslpath=fsl_path, track_density_thresh=track_density_thresh)
 
 if save_warp_archive == True:
-    os.system('cd %s; zip -r %s *' % (warp_dir, os.path.join(final_output_dir, 'subject_warps.zip')))
+    if not left_roi == 'NA' and right_roi == 'NA':
+        os.system('cd %s; zip -r %s *' % (warp_dir, os.path.join(final_output_dir, 'subject_warps.zip')))
 

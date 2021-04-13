@@ -48,7 +48,7 @@ for analysis in hcp_results:
     input_dti_key = 'dtiImage%s' % val
     
     # Get values
-    input_fa = analysis.get_file('%s_FA.nii.gz' % subject_name)
+    input_fa = analysis.get_file('%s_MD.nii.gz' % subject_name)
 
     # Combine
     inputs_dti[input_dti_key] = input_fa
@@ -60,19 +60,22 @@ for i in tome_analyses:
         group_template_analysis = i
         group_template = group_template_analysis.get_file('FODtemplate.nii.gz')
         inputs_dti['template'] = group_template    
-    elif 'mrtrixLeftTrack' in i.label:
+    if 'mrtrixLeftTrack' in i.label:
         left_roi_analysis = i
         left_roi = left_roi_analysis.get_file('mrtrixLeftTrack.vtk')
         LROI = left_roi
-    elif 'mrtrixRightTrack' in i.label:
+    if 'mrtrixRightTrack' in i.label:
         right_roi_analysis = i
         right_roi = right_roi_analysis.get_file('mrtrixRightTrack.vtk')
         RROI = right_roi 
+    if 'mrtrix0.2 - calculateFixels_0.1.0_02/04/21_23:44' in i.label:
+        main_analysis = i
+        warp_file = main_analysis.get_file('intermediate_files.zip')
 
-print('submitting RightFA - extractTrackDTIValues for TOME')
+print('submitting WholeBrainMD - extractTrackDTIValues for TOME')
 try:
-    analysis_label = 'RightFA - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
-    inputs_dti['ROIOne'] = RROI
+    analysis_label = 'WholeBrainMD - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
+    inputs_dti['warpArchive'] = warp_file
     _id = qp.run(analysis_label=analysis_label,
                   config=config, inputs=inputs_dti, destination=save_destination, tags=['vm-n1-highmem-8_disk-1500G_swap-60G'])
     analysis_ids.append(_id)

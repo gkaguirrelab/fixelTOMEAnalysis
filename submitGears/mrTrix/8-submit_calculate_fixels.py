@@ -1,11 +1,8 @@
-import flywheel
-import datetime
-import pandas as pd
-import tqdm as tqdm
+import flywheel, datetime
 
 ''''
-This script can be used to submit antsMultivariateTemplateConstruction gears for the TOME
-subjects. Does not overwrite the failed or stopped gear, so please delete those before running
+This script can be used to submit submit-calculate-fixels gear for the TOME
+subjects. Saves the results to all_mprage_images.
 '''
 
 # Initialize gear stuff
@@ -21,7 +18,7 @@ project_files = proj.files
 hcp_results = [ana for ana in analyses if ana.label.startswith('mrtrix - createSubjectFODMap')]
 
 # Set configs
-config = {'fmls_peak_value': '0.2',
+config = {'fmls_peak_value': '0.1',
           'save_intermediate_files': True}
 
 # Set destination

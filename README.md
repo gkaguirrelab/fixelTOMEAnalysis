@@ -10,9 +10,8 @@ Analysis code and Flywheel gear files for TOME fixel-based diffusion analysis
 
 # Analysis Steps
 1- Creating a FOD image from HCP-diff results.  
-    - For adaptiveConvexOptimization Tran&Shi(2015), fodMakerWrapper.m could be 
-    run directly with the DTI images and bval/bvec files
-    - For the mrtrix method, first run calculateAverageResponseFunction.py to
+- For adaptiveConvexOptimization Tran&Shi(2015), fodMakerWrapper.m could be run directly with the DTI images and bval/bvec files
+- For the mrtrix method, first run calculateAverageResponseFunction.py to
     calculate 3-tissue average response functions and then run create_fod_image.py to
     make FOD images. This method was used for the TOME data.
     

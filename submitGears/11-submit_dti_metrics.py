@@ -3,8 +3,8 @@ import datetime
 import pandas as pd
 import tqdm as tqdm
 
-''''This script can be used to submit segmentthalamicnuclei gears for the TOME
-subjects. 
+''''This script can be used to submit the gear that calculates DTI metrics for 
+the TOME subjects. The gear is the same for the fixel calculation gear. 
 Modify the subject_list to submit the gear for selected subjects. Does not 
 overwrite the failed or stopped gear, so please delete those before running
 '''
@@ -31,19 +31,7 @@ analysis_label = 'DTImetrics - createSubjectFODMap_%s_%s' % (qp.gear.version, no
 project_files = proj.files
 
 # Set config
-config = {'convexOpt-BValHighTHD': '3500',
-          'convexOpt-BValLowTHD': '500',
-          'convexOpt-init_xi': '0.12',
-          'convexOpt-MaxNumFiberCrossingPerVoxel': '4',
-          'convexOpt-MinNumConstraint': '120',
-          'convexOpt-NoiseFloor':'0',
-          'convexOpt-NumOptiSteps':'30',
-          'convexOpt-SPHMaxOrder':'8',
-          'convexOpt-UniformityFlag':'1',
-          'convexOpt-xi_NumSteps':'3',
-          'convexOpt-xi_stepsize':'0.06',
-          'method':'DTI metrics',
-          'mrTrix-lmax':'8,8,8'}
+config = {'method':'DTI metrics'}
 
 analysis_ids = []
 fails = []

@@ -4,7 +4,7 @@ import pandas as pd
 import tqdm as tqdm
 
 ''''This script can be used to submit DTI extract values gear for the TOME
-subjects. 
+subjects. This extracts the whole brain FA values.
 Modify the subject_list to submit the gear for selected subjects. Does not 
 overwrite the failed or stopped gear, so please delete those before running
 '''
@@ -48,7 +48,7 @@ for analysis in hcp_results:
     input_dti_key = 'dtiImage%s' % val
     
     # Get values
-    input_fa = analysis.get_file('%s_MD.nii.gz' % subject_name)
+    input_fa = analysis.get_file('%s_FA.nii.gz' % subject_name)
 
     # Combine
     inputs_dti[input_dti_key] = input_fa
@@ -72,9 +72,9 @@ for i in tome_analyses:
         main_analysis = i
         warp_file = main_analysis.get_file('intermediate_files.zip')
 
-print('submitting WholeBrainMD - extractTrackDTIValues for TOME')
+print('submitting WholeBrainFA - extractTrackDTIValues for TOME')
 try:
-    analysis_label = 'WholeBrainMD - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
+    analysis_label = 'WholeBrainFA - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
     inputs_dti['warpArchive'] = warp_file
     _id = qp.run(analysis_label=analysis_label,
                   config=config, inputs=inputs_dti, destination=save_destination, tags=['vm-n1-highmem-8_disk-1500G_swap-60G'])

@@ -60,15 +60,15 @@ for i in tome_analyses:
         group_template_analysis = i
         group_template = group_template_analysis.get_file('FODtemplate.nii.gz')
         inputs_dti['template'] = group_template    
-    if 'mrtrixLeftTrack' in i.label:
+    if 'left - track-single-fod-tract' in i.label:
         left_roi_analysis = i
-        left_roi = left_roi_analysis.get_file('mrtrixLeftTrack.vtk')
+        left_roi = left_roi_analysis.get_file('leftOpticTrack.vtk')
         LROI = left_roi
-    if 'mrtrixRightTrack' in i.label:
+    if 'right - track-single-fod-tract' in i.label:
         right_roi_analysis = i
-        right_roi = right_roi_analysis.get_file('mrtrixRightTrack.vtk')
+        right_roi = right_roi_analysis.get_file('rightOpticTrack.vtk')
         RROI = right_roi 
-    if 'mrtrix0.2 - calculateFixels_0.1.0_02/04/21_23:44' in i.label:
+    if '0.25_calculateFixels' in i.label:
         main_analysis = i
         warp_file = main_analysis.get_file('intermediate_files.zip')
         

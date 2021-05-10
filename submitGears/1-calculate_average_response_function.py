@@ -49,9 +49,6 @@ for analysis in hcp_results:
     subject_name = ses.subject.code
     input_file = analysis.get_file('%s_All_DTI_acqs_hcpdiff.zip' % subject_name)
     
-    if subject_name == 'TOME_3045':
-        save_destination = ses
-    
     if image_number < 10: 
         image_number_string = '0' + str(image_number)
     else:

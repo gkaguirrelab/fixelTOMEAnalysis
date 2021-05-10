@@ -21,7 +21,7 @@ subject_list = ['TOME_3001','TOME_3002','TOME_3003','TOME_3004','TOME_3005',
                 'TOME_3045','TOME_3046']
 
 # Initialize gear stuff
-now = datetime.datetime.now().strftime("%y_%m_%d_%H:%M")
+now = datetime.datetime.now().strftime("%y/%m/%d_%H:%M")
 fw = flywheel.Client()
 proj = fw.projects.find_first('label=tome')
 analyses = fw.get_analyses('projects', proj.id, 'sessions')
@@ -42,13 +42,14 @@ config = {'convexOpt-BValHighTHD': '3500',
           'convexOpt-UniformityFlag':'1',
           'convexOpt-xi_NumSteps':'3',
           'convexOpt-xi_stepsize':'0.06',
-          'method':'MRtrix sphericalDec',
-          'mrTrix-lmax':'8,8,8'}
+          'method':'MRtrix sphericalDec'}
 
 # Get the response functions 
-wm = proj.get_file('group_average_response_wm.txt')
-gm = proj.get_file('group_average_response_gm.txt')
-csf = proj.get_file('group_average_response_csf.txt')
+response_gear = [ana for ana in analyses if ana.label.startswith('calculateAverageResponseFunction')]
+response_gear = response_gear[0]
+wm = response_gear.get_file('group_average_wm.txt')
+gm = response_gear.get_file('group_average_gm.txt')
+csf = response_gear.get_file('group_average_csf.txt')
 
 analysis_ids = []
 fails = []

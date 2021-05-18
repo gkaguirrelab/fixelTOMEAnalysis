@@ -18,7 +18,7 @@ project_files = proj.files
 hcp_results = [ana for ana in analyses if ana.label.startswith('mrtrix - createSubjectFODMap')]
 
 # Set configs
-config = {'fmls_peak_value': '0.1',
+config = {'fmls_peak_value': '0.25',
           'save_intermediate_files': True}
 
 # Set destination

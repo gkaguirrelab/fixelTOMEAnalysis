@@ -60,21 +60,22 @@ for i in tome_analyses:
         group_template_analysis = i
         group_template = group_template_analysis.get_file('FODtemplate.nii.gz')
         inputs_dti['template'] = group_template    
-    if 'mrtrixLeftTrack' in i.label:
+    if 'left - track-single-fod-tract' in i.label:
         left_roi_analysis = i
-        left_roi = left_roi_analysis.get_file('mrtrixLeftTrack.vtk')
+        left_roi = left_roi_analysis.get_file('leftOpticTrack.vtk')
         LROI = left_roi
-    if 'mrtrixRightTrack' in i.label:
+    if 'right - track-single-fod-tract' in i.label:
         right_roi_analysis = i
-        right_roi = right_roi_analysis.get_file('mrtrixRightTrack.vtk')
+        right_roi = right_roi_analysis.get_file('rightOpticTrack.vtk')
         RROI = right_roi 
-    if 'mrtrix0.2 - calculateFixels_0.1.0_02/04/21_23:44' in i.label:
+    if 'calculateFixels' in i.label:
         main_analysis = i
-        warp_file = main_analysis.get_file('intermediate_files.zip')
+        warp_file = main_analysis.get_file('intermediate_files.zip')     
 
-print('submitting WholeBrainFA - extractTrackDTIValues for TOME')
+print('submitting LeftFA - extractTrackDTIValues for TOME')
 try:
-    analysis_label = 'WholeBrainFA - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
+    analysis_label = 'LeftFA - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
+    inputs_dti['ROIOne'] = LROI
     inputs_dti['warpArchive'] = warp_file
     _id = qp.run(analysis_label=analysis_label,
                   config=config, inputs=inputs_dti, destination=save_destination, tags=['vm-n1-highmem-8_disk-1500G_swap-60G'])

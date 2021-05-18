@@ -48,7 +48,7 @@ for analysis in hcp_results:
     input_dti_key = 'dtiImage%s' % val
     
     # Get values
-    input_fa = analysis.get_file('%s_FA.nii.gz' % subject_name)
+    input_fa = analysis.get_file('%s_MD.nii.gz' % subject_name)
 
     # Combine
     inputs_dti[input_dti_key] = input_fa
@@ -68,13 +68,13 @@ for i in tome_analyses:
         right_roi_analysis = i
         right_roi = right_roi_analysis.get_file('rightOpticTrack.vtk')
         RROI = right_roi 
-    if '0.25_calculateFixels' in i.label:
+    if 'calculateFixels' in i.label:
         main_analysis = i
-        warp_file = main_analysis.get_file('intermediate_files.zip')     
+        warp_file = main_analysis.get_file('intermediate_files.zip')    
 
-print('submitting LeftFA - extractTrackDTIValues for TOME')
+print('submitting LeftMD - extractTrackDTIValues for TOME')
 try:
-    analysis_label = 'LeftFA - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
+    analysis_label = 'LeftMD - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
     inputs_dti['ROIOne'] = LROI
     inputs_dti['warpArchive'] = warp_file
     _id = qp.run(analysis_label=analysis_label,

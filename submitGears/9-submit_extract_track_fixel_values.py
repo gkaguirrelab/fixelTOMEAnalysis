@@ -23,7 +23,7 @@ save_destination = fw.get(acquisitions[0].session)
 # Get the calculateFixel gear output
 fixel_files = []
 for i in save_destination.analyses:
-    if i.label.startswith('0.25_calculateFixels'):
+    if i.label.startswith('calculateFixels'):
         fixel_files.append(i)       
 run_to_use = fixel_files[-1]
 for file in run_to_use.files:

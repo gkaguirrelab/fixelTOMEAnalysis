@@ -8,10 +8,10 @@ MAINTAINER Ozzy(ozenctaskin@hotmail.com)
 ENV FLYWHEEL /flywheel/v0/
 RUN mkdir -p ${FLYWHEEL}
 COPY manifest.json run ${FLYWHEEL}
-COPY extract_dti_values.py ${FLYWHEEL}/extract_dti_values.py
+COPY construct_optic_radiations.py ${FLYWHEEL}/construct_optic_radiations.py
 COPY fslinstaller.py /fslinstaller.py
 RUN chmod +x /flywheel/v0/run
-RUN chmod +x ${FLYWHEEL}/extract_dti_values.py
+RUN chmod +x ${FLYWHEEL}/construct_optic_radiations.py
 
 # Install required packages     
 RUN apt-get update \

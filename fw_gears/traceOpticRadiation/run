@@ -15,10 +15,9 @@ final_output_dir = os.path.join(flywheel_base, 'output')
 # Set paths to the tools 
 trekker_bin = '/trekker/build/Linux/' #path to trekker
 mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
-freesurfer_environment_path = 'export FREESURFER_HOME=/freesurfer;export SUBJECTS_DIR=/freesurfer/subjects/; export PATH="$FREESURFER_HOME/bin:$PATH"; export PATH="$SUBJECTS_DIR:$PATH"'
+freesurfer_environment_path = 'export FREESURFER_HOME=/freesurfer;export SUBJECTS_DIR=/freesurfer/subjects/; export PATH="$FREESURFER_HOME/bin:$PATH"; export PATH="$SUBJECTS_DIR:$PATH";/freesurfer/bin'
 fsl_path = 'FSLDIR=/fsl/;. ${FSLDIR}/etc/fslconf/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/bin/'
 ants_path = '/usr/lib/ants/'
-
 ###################Parse Config Here###########################################
 
 with open(config_path) as config_file:

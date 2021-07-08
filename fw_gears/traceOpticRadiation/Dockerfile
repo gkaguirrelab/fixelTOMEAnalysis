@@ -17,12 +17,13 @@ RUN chmod +x ${FLYWHEEL}/construct_optic_radiations.py
 RUN apt-get update \
     && apt-get install -y \
     software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update
 RUN apt-get install -y \
-    git \
+    build-essential \
     wget \
-    g++ \ 
+    zip \
     python \
-    python-pip \
     libeigen3-dev \
     zlib1g-dev \
     libqt5opengl5-dev \
@@ -31,9 +32,15 @@ RUN apt-get install -y \
     libfftw3-dev \
     libtiff5-dev \
     libpng-dev \
-    zip \
+    unzip \
+    git \
+    cmake \
+    libgl1-mesa-glx \ 
+    xvfb \
     ants \
-    unzip
+    xserver-xephyr \ 
+    xtightvncviewer \
+    libqt4-opengl-dev
 
 # Install python2 for fslinstallation and install the newest verison of fsl
 RUN apt-get install python -y
@@ -52,6 +59,7 @@ RUN git clone https://github.com/MRtrix3/mrtrix3.git
 RUN cd mrtrix3; ./configure; ./build
 
 # Install trekker
+COPY trekker.zip /trekker.zip
 RUN unzip trekker.zip
 #RUN cd /trekker/; bash build_Linux.sh
 
@@ -61,6 +69,9 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh
 RUN bash Anaconda3-2020.02-Linux-x86_64.sh -b -p /anaconda3
 ENV PATH=$PATH:/anaconda3/bin
 RUN conda update --all -y
+
+# Install the required python packages
+RUN pip install 'nibabel' 'matplotlib' 'imageio'
 
 # Set the entrypoint  
 ENTRYPOINT /flywheel/v0/run

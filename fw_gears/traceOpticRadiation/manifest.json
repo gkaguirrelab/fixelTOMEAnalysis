@@ -4,6 +4,16 @@
 	"description": "This gear does does optic tract tractography for TOME",
 	"version": "0.1.0",
 	"inputs": {
+		"bayesianPRFOutput": {
+			"base": "file",
+			"description": "Bayesian PRF inferred volume output",
+			"optional": false
+		},
+		"calculateFixelIntermediateArchive": {
+			"base": "file",
+			"description": "The intermediate archive produced by calculateFixels",
+			"optional": false
+		},
 		"hcpStructArchive": {
 			"base": "file",
 			"description": "HCP-struct output",
@@ -14,9 +24,9 @@
 			"description": "Recon all output",
 			"optional": false
 		},
-		"bayesianPRFOutput": {
+		"subjectFOD": {
 			"base": "file",
-			"description": "Bayesian PRF inferred volume output",
+			"description": "Subject white matter FOD map",
 			"optional": false
 		},
 		"subthalamicSegmentationOutput": {
@@ -24,19 +34,9 @@
 			"description": "Output of segment thalamic nuclei gear",
 			"optional": false
 		},
-		"subjectFOD": {
-			"base": "file",
-			"description": "Subject white matter FOD map",
-			"optional": false
-		},
 		"templateFOD": {
 			"base": "file",
 			"description": "FOD template image",
-			"optional": false
-		},
-		"calculateFixelIntermediateArchive": {
-			"base": "file",
-			"description": "The intermediate archive produced by calculateFixels",
 			"optional": false
 		}
 	},
@@ -63,7 +63,7 @@
 		},
 		"gear-builder": {
 			"category": "analysis",
-			"image": "gkaguirrelab/calculate-fixels:latest"
+			"image": "gkaguirrelab/trace-optic-radiation:latest"
 		}
 	}
 }

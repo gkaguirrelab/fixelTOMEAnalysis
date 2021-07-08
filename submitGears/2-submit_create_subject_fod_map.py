@@ -43,7 +43,7 @@ config = {'convexOpt-BValHighTHD': '3500',
           'convexOpt-xi_NumSteps':'3',
           'convexOpt-xi_stepsize':'0.06',
           'method':'MRtrix sphericalDec'}
-e
+
 # Get the response functions 
 response_gear = [ana for ana in analyses if ana.label.startswith('calculateAverageResponseFunction')]
 response_gear = response_gear[0]

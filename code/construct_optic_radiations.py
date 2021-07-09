@@ -1,5 +1,3 @@
-#!/anaconda3/bin/python3
-
 import os, imageio
 import nibabel as nib
 import matplotlib.pyplot as plt
@@ -96,11 +94,11 @@ def construct_optic_radiations(hcp_struct_archive, freesurfer_archive, bayesprf_
 --convergence [ 1000x500x250x100,1e-6,10 ] --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox \
 --transform Affine[ 0.1 ] --metric MI[ %s,%s,1,32,Regular,0.25 ] --convergence [ 1000x500x250x100,1e-6,10 ] \
 --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox' % (os.path.join(ants_path, 'antsRegistration'), 
-                                                           output_name, output_warped, 
-                                                           output_inverse_warped,
-                                                           single_frame_FOD, higres_nifti, 
-                                                           single_frame_FOD, higres_nifti,
-                                                           single_frame_FOD, higres_nifti)
+                                                            output_name, output_warped, 
+                                                            output_inverse_warped,
+                                                            single_frame_FOD, higres_nifti, 
+                                                            single_frame_FOD, higres_nifti,
+                                                            single_frame_FOD, higres_nifti)
     os.system(ants_run)
     
     # Move V1 to subject FOD space
@@ -139,11 +137,11 @@ def construct_optic_radiations(hcp_struct_archive, freesurfer_archive, bayesprf_
     # Do tractography
     left_track = os.path.join(subject_workdir, 'left_optic_radiation.vtk')
     right_track = os.path.join(subject_workdir, 'right_optic_radiation.vtk')
-    os.system('%s -fod %s -seed_image %s -seed_count 100 -pathway=require_entry %s -pathway=stop_at_exit %s -minFODamp %s -output %s -maxLength 100 -atMaxLength discard -directionality one_sided > %s/trekker_left.log' % (os.path.join(trekker_path, 'trekker'),
+    os.system('%s -fod %s -seed_image %s -seed_count 12000 -pathway=require_entry %s -pathway=stop_at_exit %s -minFODamp %s -output %s -maxLength 100 -atMaxLength discard -directionality one_sided > %s/trekker_left.log' % (os.path.join(trekker_path, 'trekker'),
                                                                                                                                                                                                                                 subjectFOD, warped_lgn_left,
                                                                                                                                                                                                                                 warped_v1, warped_v1, minFODamp, 
                                                                                                                                                                                                                                 left_track, outputdir))
-    os.system('%s -fod %s -seed_image %s -seed_count 100 -pathway=require_entry %s -pathway=stop_at_exit %s -minFODamp %s -output %s -maxLength 100 -atMaxLength discard -directionality one_sided > %s/trekker_right.log' % (os.path.join(trekker_path, 'trekker'),
+    os.system('%s -fod %s -seed_image %s -seed_count 12000 -pathway=require_entry %s -pathway=stop_at_exit %s -minFODamp %s -output %s -maxLength 100 -atMaxLength discard -directionality one_sided > %s/trekker_right.log' % (os.path.join(trekker_path, 'trekker'),
                                                                                                                                                                                                                                 subjectFOD, warped_lgn_right,
                                                                                                                                                                                                                                 warped_v1, warped_v1, minFODamp, 
                                                                                                                                                                                                                                 right_track, outputdir))
@@ -179,7 +177,7 @@ def construct_optic_radiations(hcp_struct_archive, freesurfer_archive, bayesprf_
     os.system('%s -warp %s -interp nearest -datatype bit -template %s %s %s' % (os.path.join(mrtrix_path, 'mrtransform'),
                                                                                 fod_warp, single_frame_FOD_template,
                                                                                 thresholded_density_right, track_mask_in_template_right))
-    os.system('fslmaths %s -add %s %s' % (track_mask_in_template_left, track_mask_in_template_right, combined_template_track_volumes))
+    os.system('%s %s -add %s %s' % (os.path.join(fsl_path, 'fslmaths'), track_mask_in_template_left, track_mask_in_template_right, combined_template_track_volumes))
     
     # Plot tracks
     combined_native_tracks = os.path.join(outputdir, 'native_combined_optic_radiation.tck')

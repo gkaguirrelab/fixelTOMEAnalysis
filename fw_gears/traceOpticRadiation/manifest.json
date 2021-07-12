@@ -2,7 +2,7 @@
 	"name": "trace-optic-radiation",
 	"label": "traceOpticRadiation: Calculate optic radiation tractography",
 	"description": "This gear does does optic tract tractography for TOME",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"inputs": {
 		"bayesianPRFOutput": {
 			"base": "file",
@@ -49,6 +49,11 @@
 		"trackDensityThreshold": {
 			"default": "1",
 			"description": "Track density threshold for thresholding the tracks",
+			"type": "string"
+		},
+		"numTracks": {
+			"default": "10000",
+			"description": "Number of tracks to construct",
 			"type": "string"
 		}
 	},

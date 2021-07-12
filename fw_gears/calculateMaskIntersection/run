@@ -1,0 +1,38 @@
+#!/anaconda3/bin/python3
+
+import os
+from calculateMaskIntersection import calculateMaskIntersection
+
+# Set initial Flywheel paths
+flywheel_base ='/flywheel/v0/'
+manifest_file = os.path.join(flywheel_base, 'manifest.json')
+config_path = os.path.join(flywheel_base, 'config.json')
+first_output_dir = '/firstOutput' # Working in the flywheel output folder might cause issues so creating a first level output folder 
+os.system('mkdir %s'%first_output_dir)
+final_output_dir = os.path.join(flywheel_base, 'output')
+
+# Set paths to the tools 
+mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
+fsl_path = 'FSLDIR=/fsl/;. ${FSLDIR}/etc/fslconf/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/bin/'
+
+################### Input Files ###############################################
+
+# paths to inputs
+mask_list = []
+# Find the images and put the paths into fod/mask python lists
+for i in range(45):
+    image_number = i+1  
+    if image_number < 10: 
+        image_number_string = '0' + str(image_number)
+    else:
+        image_number_string = str(image_number)  
+   
+    mask_path_and_name = os.path.join(flywheel_base, 'input', 'mask%s' % image_number_string) 
+    if os.path.exists(mask_path_and_name):    
+        mask = os.path.join(mask_path_and_name, os.listdir(mask_path_and_name)[0]) 
+        mask_list.append(mask)
+
+#################### Process #################################################
+
+calculateMaskIntersection(mask_list, fsl_path, first_output_dir, final_output_dir)
+

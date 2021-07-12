@@ -1,0 +1,248 @@
+{
+	"name": "calculate-mask-intersection",
+	"label": "calculateMaskIntersection: Calculate intersection of multiple volumetric masks",
+	"description": "This gear calculates intersection of multiple masks and creates a new ROI",
+	"version": "0.1.0",
+	"inputs": {
+		"mask01": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": false
+		},
+		"mask02": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask03": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask04": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask05": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask06": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask07": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask08": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask09": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask10": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask11": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask12": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask13": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask14": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask15": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask16": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask17": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask18": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask19": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask20": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask21": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask22": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask23": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask24": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask25": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask26": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask27": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask28": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask29": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask30": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask31": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask32": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask33": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask34": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask35": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask36": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask37": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask38": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask39": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask40": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask41": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask42": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask43": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask44": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		},
+		"mask45": {
+			"base": "file",
+			"description": "Mask image.",
+			"optional": true
+		}
+	},
+	"config": {},
+	"author": "Ozenc Taskin",
+	"maintainer": "Ozenc Taskin",
+	"license": "Other",
+	"source": "https://www.mrtrix.org/",
+	"url": "https://github.com/gkaguirrelab/fixelTOMEAnalysis/fw_gears/calculateMaskIntersection",
+	"custom": {
+		"flywheel": {
+			"suite": "GKAguirreLab"
+		},
+		"gear-builder": {
+			"category": "analysis",
+			"image": "gkaguirrelab/calculate-mask-intersection:latest"
+		}
+	}
+}

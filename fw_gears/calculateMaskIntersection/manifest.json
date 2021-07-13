@@ -2,7 +2,7 @@
 	"name": "calculate-mask-intersection",
 	"label": "calculateMaskIntersection: Calculate intersection of multiple volumetric masks",
 	"description": "This gear calculates intersection of multiple masks and creates a new ROI",
-	"version": "0.1.0",
+	"version": "0.1.4",
 	"inputs": {
 		"mask01": {
 			"base": "file",
@@ -230,7 +230,12 @@
 			"optional": true
 		}
 	},
-	"config": {},
+	"config": {
+		"outputFileName": {
+			"description": "output file name",
+			"type": "string"
+		}	
+	},
 	"author": "Ozenc Taskin",
 	"maintainer": "Ozenc Taskin",
 	"license": "Other",

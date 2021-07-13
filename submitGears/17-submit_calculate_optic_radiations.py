@@ -51,12 +51,12 @@ for sub in subjects:
                 struct_input = st.get_file('%s_hcpstruct.zip' % subject_label)
         for recon in recon_all:
             if recon.parents.subject == subject_id:
-                session_id = recon.parents.session
                 for fil in recon.files:
                     if fil.name[-3:] == 'zip':
                         recon_input = fil
         for fod in subject_fod:
             if fod.parents.subject == subject_id:
+                session_id = fod.parents.session
                 fod_input = fod.get_file('preproc_wm_fod_%s.nii.gz' % subject_label)      
         for seg in segment_thalamic:
             if seg.parents.subject == subject_id:

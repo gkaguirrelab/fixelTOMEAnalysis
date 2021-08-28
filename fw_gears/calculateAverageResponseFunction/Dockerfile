@@ -34,8 +34,8 @@ RUN apt-get install -y \
 
 # Install Mrtrix
 RUN apt-get install libqt4-opengl-dev -y
-RUN git clone https://github.com/MRtrix3/mrtrix3.git
-RUN cd mrtrix3; ./configure; ./build
+RUN git clone https://github.com/3Tissue/MRtrix3Tissue.git 
+RUN cd MRtrix3Tissue; ./configure; ./build
 
 # Install Anaconda
 RUN apt-get install wget

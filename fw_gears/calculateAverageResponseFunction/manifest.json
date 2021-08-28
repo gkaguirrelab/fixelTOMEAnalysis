@@ -1,8 +1,8 @@
 {
 	"name": "calculate-average-response-function",
 	"label": "calculateAverageResponseFunction: Calculate average response function from DWI images",
-	"description": "This gear creates single or multi shell average response functions from DWI images using Mrtrix dhollander or tournier methods. HCP-diff archives can also be used as inputs",
-	"version": "0.1.1",
+	"description": "This gear creates single or multi tissue average response functions from DWI images using Mrtrix dhollander or tournier methods. HCP-diff archives can also be used as inputs. Dhollander method uses the newer 2019 implementation in Mrtrix3Tissue package.",
+	"version": "0.1.4",
 	"inputs": {
 		"dwiImage01": {
 			"base": "file",
@@ -231,9 +231,9 @@
 		}
 	},
 	"config": {
-		"shell": {
+		"tissue": {
 			"default": "multi",
-			"description": "single or multi shell",
+			"description": "single or multi tissue response",
 			"type": "string"
 		}
 	},

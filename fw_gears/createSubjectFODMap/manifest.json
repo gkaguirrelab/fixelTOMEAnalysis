@@ -2,7 +2,7 @@
 	"name": "create-subject-fod-map",
 	"label": "createSubjectFODMap: Make FOD image from HCP-diff output",
 	"description": "This gear uses multi-shell HCP-diff output archive to calculate FOD images. The details of MRtrix spherical deconvolution method can be found here: mrtrix.readthedocs.io. If you use the adaptive convex optimization method please cite the following paper: Tran G, Shi Y. Adaptively constrained convex optimization for accurate fiber orientation estimation with high order spherical harmonics. Med Image Comput Comput Assist Interv. 2013;16(Pt 3):485-492. doi:10.1007/978-3-642-40760-4_61, Also with this gear DTI metrics (e.g MD,FA) can be calculated. FSL's DTIfit is used for this operation.",
-	"version": "0.2.2",
+	"version": "0.2.5",
 	"inputs": {
 		"hcp_diff_archive": {
 			"base": "file",
@@ -94,6 +94,21 @@
 			"default": "NA",
 			"description": "the maximum spherical harmonic order for the output FOD(s).For algorithms with multiple outputs, this should be provided as a comma-separated list of integers, one for each output image; for single-output algorithms, only a single integer should be provided. If omitted, the command will use the lmax of the corresponding response function (i.e based on its number of coefficients), up to a maximum of 8. If NA, decide from the data",
 			"type": "string"
+		},
+		"mrTrix-n_threads": {
+			"default": "0",
+			"description": "Number of threads",
+			"type": "string"
+		},
+		"mrTrix-use_highest_b": {
+			"default": false,
+			"description": "Use only the highest shell for the FOD analysis. This was shown to be effective for making better fiber density calculations for the fixel based analysis",
+			"type": "boolean"
+		},
+		"saveIntermediateFiles": {
+			"default": false,
+			"description": "Save intermediate files",
+			"type": "boolean"
 		}
 	},
 	"author": "Ozenc Taskin",

@@ -19,7 +19,7 @@ constraintFile = os.path.join(flywheel_base, 'ConstraintSet.mat')
 sphereParam = os.path.join(flywheel_base, 'sphere5120.obj')
 
 # Set paths to the tools 
-mrtrix_path = '/mrtrix3/bin/' #path to mrtrix bin
+mrtrix_path = '/MRtrix3Tissue/bin/' #path to mrtrix bin
 mcr_path = '/usr/local/MATLAB/MATLAB_Runtime/v98'
 fsl_path = 'FSLDIR=/fsl/;. ${FSLDIR}/etc/fslconf/fsl.sh;PATH=${FSLDIR}:${PATH};export FSLDIR PATH;/fsl/bin/'
 
@@ -43,6 +43,9 @@ MaxNumFiberCrossingPerVoxel = config['convexOpt-MaxNumFiberCrossingPerVoxel']
 UniformityFlag = config['convexOpt-UniformityFlag']
 NoiseFloor = config['convexOpt-NoiseFloor']
 lmax = config['mrTrix-lmax']
+use_highest_b = config['mrTrix-use_highest_b']
+n_threads = config['mrTrix-n_threads']
+saveIntermediateFiles = config['saveIntermediateFiles']
 
 ################### Input Files ###############################################
 
@@ -83,7 +86,7 @@ fod_workdir = os.path.join(first_output_dir, 'fod_workdir')
 split_work_dir = os.path.join(first_output_dir, 'split_workdir')
 
 if method == 'MRtrix sphericalDec':
-    create_fod_image(dwi_image, mask_image, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_path, subject_id, fod_workdir, final_output_dir)
+    create_fod_image(dwi_image, mask_image, bvecs, bvals, response_wm, response_gm, response_csf, lmax, mrtrix_path, subject_id, fod_workdir, final_output_dir,use_highest_b=use_highest_b, n_threads=n_threads)
 elif method == 'Adaptive Convex Optimization (Tran and Shi, 2015)':
     # Resample DWI images
     upscaled_dwi = os.path.join(first_output_dir, 'upscaled_dwi.nii.gz')
@@ -131,3 +134,6 @@ elif method == 'DTI metrics':
                                                               bvecs, bvals))
 else:
     print('Method unrecognized')
+
+if saveIntermediateFiles == True:
+    os.system('cd %s; zip -q -r %s *' % (first_output_dir, os.path.join(final_output_dir, 'intermediate_files.zip')))

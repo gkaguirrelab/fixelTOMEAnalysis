@@ -43,9 +43,9 @@ RUN apt-get install -y \
 #RUN python3 -m pip install 'matplotlib==3.1.3' 'nibabel==2.5.1' 'numpy==1.18.1' 'imageio==2.8.0' 'nilearn==0.6.2' 'neuropythy==0.11.5' 'pandas==1.0.3' 'hcp-utils==0.1.0'
 
 # Install Mrtrix
-RUN git clone https://github.com/MRtrix3/mrtrix3.git
 RUN apt-get install libqt4-opengl-dev -y
-RUN cd mrtrix3; ./configure; ./build
+RUN git clone https://github.com/3Tissue/MRtrix3Tissue.git 
+RUN cd MRtrix3Tissue; ./configure; ./build
 
 # Download and install MCR on call
 RUN apt-get install wget

@@ -3,7 +3,7 @@ import nibabel as nib
 import matplotlib.pyplot as plt
 
 def construct_optic_radiations(hcp_struct_archive, freesurfer_archive, bayesprf_inferred_volume_archive, segment_thalamic_segmentations_archive, 
-                               subjectFOD, FODtemplate, calculateFixelsIntermediate, workdir, outputdir, minFODamp='0.2', track_density_thresh='1', numTracks='10000', freesurfer_path='', 
+                               subjectFOD, FODtemplate, calculateFixelsIntermediate, workdir, outputdir, minFODampLeft='0.2', minFODampRight='0.2', track_density_thresh='1', numTracks='10000', freesurfer_path='', 
                                ants_path='', fsl_path='', mrtrix_path='', trekker_path=''):
 
     def make_plot(subject_id, base_image, overlay, title, filename, x, y, z, apect_ratio_vector, output_folder):
@@ -139,11 +139,11 @@ def construct_optic_radiations(hcp_struct_archive, freesurfer_archive, bayesprf_
     right_track = os.path.join(subject_workdir, 'right_optic_radiation.vtk')
     os.system('%s -fod %s -seed_image %s -seed_count %s -pathway=require_entry %s -pathway=stop_at_exit %s -minFODamp %s -output %s -maxLength 100 -atMaxLength discard -directionality one_sided > %s/trekker_left.log' % (os.path.join(trekker_path, 'trekker'),
                                                                                                                                                                                                                                 subjectFOD, warped_lgn_left,
-                                                                                                                                                                                                                                numTracks, warped_v1, warped_v1, minFODamp, 
+                                                                                                                                                                                                                                numTracks, warped_v1, warped_v1, minFODampLeft, 
                                                                                                                                                                                                                                 left_track, outputdir))
     os.system('%s -fod %s -seed_image %s -seed_count %s -pathway=require_entry %s -pathway=stop_at_exit %s -minFODamp %s -output %s -maxLength 100 -atMaxLength discard -directionality one_sided > %s/trekker_right.log' % (os.path.join(trekker_path, 'trekker'),
                                                                                                                                                                                                                                 subjectFOD, warped_lgn_right,
-                                                                                                                                                                                                                                numTracks, warped_v1, warped_v1, minFODamp, 
+                                                                                                                                                                                                                                numTracks, warped_v1, warped_v1, minFODampRight, 
                                                                                                                                                                                                                                 right_track, outputdir))
     # Convert tracks to tck 
     tck_left = os.path.join(outputdir, '%s_native_left_optic_radiation.tck' % subject_id)

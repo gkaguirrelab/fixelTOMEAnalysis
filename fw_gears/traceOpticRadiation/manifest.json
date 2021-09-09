@@ -41,9 +41,14 @@
 		}
 	},
 	"config": {
-		"minFODamp": {
+		"minFODampLeft": {
 			"default": "0.2",
-			"description": "Minimum FOD amplitude",
+			"description": "Minimum FOD amplitude left hemisphere",
+			"type": "string"
+		},
+		"minFODampRight": {
+			"default": "0.2",
+			"description": "Minimum FOD amplitude right hemisphere",
 			"type": "string"
 		},
 		"trackDensityThreshold": {

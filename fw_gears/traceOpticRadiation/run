@@ -25,7 +25,8 @@ with open(config_path) as config_file:
 
 config = job_config['config']
 
-minFODamp = config['minFODamp']
+minFODampLeft = config['minFODampLeft']
+minFODampRight = config['minFODampRight']
 trackDensityThreshold = config['trackDensityThreshold']
 numTracks = config['numTracks']
 ################### Input Files ###############################################
@@ -52,6 +53,6 @@ calculateFixelIntermediateArchive = os.path.join(calculateFixelIntermediateArchi
 
 construct_optic_radiations(hcpStructArchive, reconAllOutput, bayesianPRFOutput, subthalamicSegmentationOutput, 
                            subjectFOD, templateFOD, calculateFixelIntermediateArchive, first_output_dir, final_output_dir, 
-                           minFODamp = minFODamp, track_density_thresh = trackDensityThreshold, numTracks=numTracks,
+                           minFODampLeft = minFODampLeft, minFODampRight = minFODampRight, track_density_thresh = trackDensityThreshold, numTracks=numTracks,
                            freesurfer_path=freesurfer_environment_path, ants_path=ants_path, fsl_path=fsl_path, mrtrix_path=mrtrix_path, trekker_path=trekker_bin)
 

@@ -43,7 +43,7 @@ for sub in subjects:
     subject_id = sub.id
     subject_label = sub.label
     if subject_label == 'TOME_3004':
-        config = {'minFODampLeft':'0.2', 'minFODampRight':'0.15'}
+        config = {'minFODampLeft':'0.2', 'minFODampRight':'0.1'}
     elif subject_label == 'TOME_3005':
         config = {'minFODampLeft':'0.15', 'minFODampRight':'0.2'}
     elif subject_label == 'TOME_3009':

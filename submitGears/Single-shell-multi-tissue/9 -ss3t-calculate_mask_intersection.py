@@ -14,7 +14,7 @@ qp = fw.lookup('gears/calculate-mask-intersection')
 project_files = proj.files
 
 # Find the subjects that have an hcp-diff run
-trace_optic_radiation = [ana for ana in analyses if ana.label.startswith('traceOpticRadiation')]
+trace_optic_radiation = [ana for ana in analyses if ana.label.startswith('SS3T - traceOpticRadiation')]
 
 # Set destination
 acquisitions = fw.acquisitions.find('label=all_mprage_images') 
@@ -44,7 +44,7 @@ for analysis in trace_optic_radiation:
     input_mask[input_mask_key] = input_mask_value
     
 # Submit the gear  
-analysis_label = 'left_calculateMaskIntersection_%s_%s' % (qp.gear.version, now)
+analysis_label = 'SS3T - left - calculateMaskIntersection_%s_%s' % (qp.gear.version, now)
 analysis_ids = []
 fails = []      
 config = {'outputFileName': 'left_mask'}
@@ -80,7 +80,7 @@ for analysis in trace_optic_radiation:
     input_mask[input_mask_key] = input_mask_value
     
 # Submit the gear  
-analysis_label = 'right_calculateMaskIntersection_%s_%s' % (qp.gear.version, now)
+analysis_label = 'SS3T - right - calculateMaskIntersection_%s_%s' % (qp.gear.version, now)
 analysis_ids = []
 fails = []     
 config = {'outputFileName': 'right_mask'} 

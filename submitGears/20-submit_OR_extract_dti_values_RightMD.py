@@ -11,7 +11,7 @@ overwrite the failed or stopped gear, so please delete those before running
 
 # Initialize gear stuff
 now = datetime.datetime.now().strftime("%y/%m/%d_%H:%M")
-fw = flywheel.Client()
+fw = flywheel.Client('upenn.flywheel.io:dEDBvqRHFRoLbW0u0Q')
 proj = fw.projects.find_first('label=tome')
 analyses = fw.get_analyses('projects', proj.id, 'sessions')
 hcp_results = [ana for ana in analyses if ana.label.startswith('DTImetrics')]
@@ -54,7 +54,7 @@ for analysis in hcp_results:
     inputs_dti[input_dti_key] = input_fa
 
 # Get left, right roi and group template
-tome_analyses = save_destination.analyses
+tome_analyses = analyses
 for i in tome_analyses:
     if 'SS3T - createGroupFODTemplate' in i.label:
         group_template_analysis = i

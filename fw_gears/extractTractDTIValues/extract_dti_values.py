@@ -3,7 +3,7 @@ import pandas as pd
 import nibabel as nib
 import matplotlib.pyplot as plt
 
-def extract_dti_values(metric_images, workdir, output_folder_path, left_track, right_track, tckmap_template, n_threads='2', warpfolder='', mrtrix_path='', freesurfer_path='', ants_path='', fslpath='', track_density_thresh='1'):
+def extract_dti_values(metric_images, workdir, output_folder_path, left_track, right_track, tckmap_template, input_is_processed=False, n_threads='2', warpfolder='', mrtrix_path='', freesurfer_path='', ants_path='', fslpath='', track_density_thresh='1'):
 
     '''
     metric_image: input image list. all images need to be the same type (FA,MD,etc.)
@@ -62,40 +62,50 @@ def extract_dti_values(metric_images, workdir, output_folder_path, left_track, r
             images.append(imageio.imread(os.path.join(image_folder, filename)))
             imageio.mimsave('/%s/%s.gif' % (output_folder, gif_name), images, duration=0.7)
 
-    ### Process tractography ####    
-    # Convert vtk to tck
-    tractography_folder = os.path.join(workdir, 'tractography')
-    os.system('mkdir %s' % tractography_folder)
-    if not left_track == 'NA': 
-        left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
-        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
-    if not right_track == 'NA':
-        right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
-        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
-            
-    # Combine the tracks if more than one exist 
-    if not left_track == 'NA' and not right_track == 'NA':
-        left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
-        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
-    elif not left_track == 'NA':
-        left_and_right_tck = left_track_tck
-    elif not right_track == 'NA':
-        left_and_right_tck = right_track_tck
-    else:
-        left_and_right_tck = 'NA'
-    
-    # Calculate track density map    
-    if not left_and_right_tck == 'NA':
-        track_density_map = os.path.join(tractography_folder, 'track_density_map.nii.gz')
-        os.system('%s %s %s -template %s' % (os.path.join(mrtrix_path, 'tckmap'), left_and_right_tck, 
-                                             track_density_map, tckmap_template))
-    
-    # Threshold the track density map
-    if not left_and_right_tck == 'NA':
-        thresholded_track = os.path.join(tractography_folder, 'thresholded.nii.gz')
-        os.system('%s %s -abs %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_map, 
-                                        track_density_thresh, thresholded_track))
-    
+    if input_is_processed == False:
+        ### Process tractography ####
+        # Convert vtk to tck
+        tractography_folder = os.path.join(workdir, 'tractography')
+        os.system('mkdir %s' % tractography_folder)
+        if not left_track == 'NA':
+            left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
+            os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
+        if not right_track == 'NA':
+            right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
+            os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
+
+        # Combine the tracks if more than one exist
+        if not left_track == 'NA' and not right_track == 'NA':
+            left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
+            os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
+        elif not left_track == 'NA':
+            left_and_right_tck = left_track_tck
+        elif not right_track == 'NA':
+            left_and_right_tck = right_track_tck
+        else:
+            left_and_right_tck = 'NA'
+
+        # Calculate track density map
+        if not left_and_right_tck == 'NA':
+            track_density_map = os.path.join(tractography_folder, 'track_density_map.nii.gz')
+            os.system('%s %s %s -template %s' % (os.path.join(mrtrix_path, 'tckmap'), left_and_right_tck,
+                                                 track_density_map, tckmap_template))
+
+        # Threshold the track density map
+        if not left_and_right_tck == 'NA':
+            thresholded_track = os.path.join(tractography_folder, 'thresholded.nii.gz')
+            os.system('%s %s -abs %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_map,
+                                            track_density_thresh, thresholded_track))
+
+    # If processed input is true, use masks directly instead of processing
+    if input_is_processed == True:
+        if not left_track == 'NA':
+            thresholded_track = left_track
+        if not right_track == 'NA':
+            thresholded_track = right_track
+        if left_track == 'NA' and right_track == 'NA':
+            raise RuntimeError('Combining volumetric masks when input_is_processed is true is not implemented yet. Input one mask instead.')
+
     # Initiate pandas object
     pandasSubject = []
     pandasMean = []

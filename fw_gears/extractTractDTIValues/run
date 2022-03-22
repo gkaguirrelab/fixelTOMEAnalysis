@@ -30,6 +30,7 @@ config = job_config['config']
 save_warp_archive = config['save_warp_archive']
 track_density_thresh = config['track_density_thresh']
 n_threads = config['n_threads']
+input_is_processed = config['input_is_processed']
 
 ################### Input Files ###############################################
 
@@ -78,7 +79,7 @@ if os.path.exists(template_image_path):
     template_image = os.path.join(template_image_path, os.listdir(template_image_path)[0])
 
 #################### Run Func #################################################
-warp_dir = extract_dti_values(metric_images, first_output_dir, final_output_dir, left_roi, right_roi, template_image, n_threads=n_threads, warpfolder=unzipped_results, mrtrix_path=mrtrix_path, freesurfer_path=freesurfer_path, ants_path='', fslpath=fsl_path, track_density_thresh=track_density_thresh)
+warp_dir = extract_dti_values(metric_images, first_output_dir, final_output_dir, left_roi, right_roi, template_image, input_is_processed=input_is_processed, n_threads=n_threads, warpfolder=unzipped_results, mrtrix_path=mrtrix_path, freesurfer_path=freesurfer_path, ants_path='', fslpath=fsl_path, track_density_thresh=track_density_thresh)
 
 if save_warp_archive == True:
     if not left_roi == 'NA' and right_roi == 'NA':

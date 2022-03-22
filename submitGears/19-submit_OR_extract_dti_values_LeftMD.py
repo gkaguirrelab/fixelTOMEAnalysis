@@ -23,7 +23,7 @@ acquisitions = fw.acquisitions.find('label=all_mprage_images')
 save_destination = fw.get(acquisitions[0].session)
 
 # Set config
-config = {'voxelSize': '1.25', 'save_warp_archive':True, 'track_density_thresh': '1', 'n_threads': '7'}
+config = {'voxelSize': '1.25', 'save_warp_archive':True, 'track_density_thresh': '1', 'n_threads': '7', 'input_is_processed':True}
 
 # Set the initial input dictionary
 analysis_ids = []
@@ -56,25 +56,25 @@ for analysis in hcp_results:
 # Get left, right roi and group template
 tome_analyses = save_destination.analyses
 for i in tome_analyses:
-    if 'mrtrix - createGroupFODTemplate' in i.label:
+    if 'SS3T - createGroupFODTemplate' in i.label:
         group_template_analysis = i
         group_template = group_template_analysis.get_file('FODtemplate.nii.gz')
         inputs_dti['template'] = group_template    
-    if 'left - track-single-fod-tract' in i.label:
+    if 'SS3T - left - calculateMaskIntersection' in i.label:
         left_roi_analysis = i
-        left_roi = left_roi_analysis.get_file('leftOpticTrack.vtk')
+        left_roi = left_roi_analysis.get_file('left_mask.nii.gz')
         LROI = left_roi
-    if 'right - track-single-fod-tract' in i.label:
+    if 'SS3T - right - calculateMaskIntersection' in i.label:
         right_roi_analysis = i
-        right_roi = right_roi_analysis.get_file('rightOpticTrack.vtk')
+        right_roi = right_roi_analysis.get_file('right_mask.nii.gz')
         RROI = right_roi 
-    if 'calculateFixels' in i.label:
+    if 'SS3T - calculateFixels' in i.label:
         main_analysis = i
         warp_file = main_analysis.get_file('intermediate_files.zip')    
 
 print('submitting LeftMD - extractTrackDTIValues for TOME')
 try:
-    analysis_label = 'LeftMD - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
+    analysis_label = 'LeftMD-OR - extractTrackDTIValues_%s_%s' % (qp.gear.version, now)
     inputs_dti['ROIOne'] = LROI
     inputs_dti['warpArchive'] = warp_file
     _id = qp.run(analysis_label=analysis_label,

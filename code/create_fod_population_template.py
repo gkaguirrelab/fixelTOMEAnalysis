@@ -33,13 +33,15 @@ def create_fod_population_template(fod_list, mask_list, path_to_mrtrix_bin, work
     # Get the length of the list
     num_images = len(fod_list)    
     for i in range(num_images):
-        new_file_name = str(i + 1) + '.nii.gz'
+        new_file_name = str(i + 1) + '.mif'
+        print('renaming %s to %s' % (os.path.split(fod_list[i])[1], new_file_name))
+        print('renaming %s to %s' % (os.path.split(mask_list[i])[1], new_file_name))
         os.system('cp %s %s' % (fod_list[i], os.path.join(input_fods, new_file_name)))
         os.system('cp %s %s' % (mask_list[i], os.path.join(input_masks, new_file_name)))
     
-    os.system('%s %s -mask_dir %s %s -voxel_size %s' % (os.path.join(path_to_mrtrix_bin, 'population_template'),
-                                                        input_fods, input_masks, output_template_file,
-                                                        voxel_size))
+    os.system('%s %s -mask_dir %s %s -voxel_size %s -scratch %s' % (os.path.join(path_to_mrtrix_bin, 'population_template'),
+                                                                    input_fods, input_masks, output_template_file,
+                                                                    voxel_size, workdir))
     
     return (workdir, output_template_file)
         

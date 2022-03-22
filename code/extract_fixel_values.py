@@ -1,7 +1,7 @@
 import os, subprocess
 import pandas as pd
 
-def extract_fixel_values(input_dir, mrtrix_path, output_folder_path, left_track, right_track, track_density_thresh='1', smooth_fixels=False):
+def extract_fixel_values(input_dir, mrtrix_path, output_folder_path, left_track, right_track, input_is_processed='False', track_density_thresh='1', smooth_fixels=False):
     '''
     input_dir: fixelAnalysis script 
     mrtrix_path: Path to mrtrix bin. If you can call mrtrix functions from the terminal, you can leave this empty ''
@@ -9,63 +9,79 @@ def extract_fixel_values(input_dir, mrtrix_path, output_folder_path, left_track,
     subject_fod_list: A python list that contains FOD images
     left_track: Left hemisphere track
     right_track: Right hemisphere track
+    input_is_processed: Input is already a processed mask. 
     track_density_thresh: Select only those voxels that have the specified amount of fibres running through it
     smooth_fixels = Run fixel2fixel connectivity and smooth the voxels
     '''
     #### Process tractography ####
     # Set path to some input folders
     fixel_mask = os.path.join(input_dir, 'fixel_mask')
-    
-    # Convert vtk to tck
+ 
+    # Create the tractography folder
     tractography_folder = os.path.join(output_folder_path, 'tractography')
     os.system('mkdir %s' % tractography_folder)
-    if not left_track == 'NA': 
-        left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
-        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
-    if not right_track == 'NA':
-        right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
-        os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
+    
+    if input_is_processed == False:
+        # Convert vtk to tck
+        if not left_track == 'NA': 
+            left_track_tck = os.path.join(tractography_folder, 'left_tract.tck')
+            os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), left_track, left_track_tck))
+        if not right_track == 'NA':
+            right_track_tck = os.path.join(tractography_folder, 'right_tract.tck')
+            os.system('%s %s %s' % (os.path.join(mrtrix_path, 'tckconvert'), right_track, right_track_tck))
+                
+        # Combine the tracks if more than one exist 
+        if not left_track == 'NA' and not right_track == 'NA':
+            left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
+            os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
+        elif not left_track == 'NA':
+            left_and_right_tck = left_track_tck
+        elif not right_track == 'NA':
+            left_and_right_tck = right_track_tck
+        else:
+            raise RuntimeError('You need to specify at least one track to extract values from')
+        
+        # Calculate fixel2fixel measurements and smooth fixel data if requested
+        if smooth_fixels == True:
+            smoothed_fd_dir = os.path.join(input_dir, 'smooth_fd')
+            smoothed_fc_dir = os.path.join(input_dir, 'smooth_fc')
+            smoothed_log_fc_dir = os.path.join(input_dir, 'smooth_log_fc')
+            smoothed_fdc_dir = os.path.join(input_dir, 'smooth_fdc')
             
-    # Combine the tracks if more than one exist 
-    if not left_track == 'NA' and not right_track == 'NA':
-        left_and_right_tck = os.path.join(tractography_folder, 'left_and_right_tracks.tck')
-        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'tckedit'), left_track_tck, right_track_tck, left_and_right_tck))
-    elif not left_track == 'NA':
-        left_and_right_tck = left_track_tck
-    elif not right_track == 'NA':
-        left_and_right_tck = right_track_tck
-    else:
-        raise RuntimeError('You need to specify at least one track to extract values from')
-    
-    # Calculate fixel2fixel measurements and smooth fixel data if requested
-    if smooth_fixels == True:
-        smoothed_fd_dir = os.path.join(input_dir, 'smooth_fd')
-        smoothed_fc_dir = os.path.join(input_dir, 'smooth_fc')
-        smoothed_log_fc_dir = os.path.join(input_dir, 'smooth_log_fc')
-        smoothed_fdc_dir = os.path.join(input_dir, 'smooth_fdc')
+            fixel_fixel_connectivity_dir = os.path.join(output_folder_path, 'fixel2fixelConn')
+            os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelconnectivity'),
+                                        fixel_mask, left_and_right_tck, fixel_fixel_connectivity_dir))
+            os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'fd'),
+                                                      smoothed_fd_dir, fixel_fixel_connectivity_dir))
+            os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'fc'),
+                                                      smoothed_fc_dir, fixel_fixel_connectivity_dir))
+            os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'log_fc'),
+                                                      smoothed_log_fc_dir, fixel_fixel_connectivity_dir))
+            os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'fdc'),
+                                                      smoothed_fdc_dir, fixel_fixel_connectivity_dir))        
+            
+        # Map tracks to the fixel template 
+        fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
+        os.system('%s %s %s %s track_density.mif' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
+                                                     fixel_mask, fixel_folder_tracked))
+        track_density_file = os.path.join(fixel_folder_tracked, 'track_density.mif')
         
-        fixel_fixel_connectivity_dir = os.path.join(output_folder_path, 'fixel2fixelConn')
-        os.system('%s %s %s %s' % (os.path.join(mrtrix_path, 'fixelconnectivity'),
-                                    fixel_mask, left_and_right_tck, fixel_fixel_connectivity_dir))
-        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'fd'),
-                                                  smoothed_fd_dir, fixel_fixel_connectivity_dir))
-        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'fc'),
-                                                  smoothed_fc_dir, fixel_fixel_connectivity_dir))
-        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'log_fc'),
-                                                  smoothed_log_fc_dir, fixel_fixel_connectivity_dir))
-        os.system('%s %s smooth %s -matrix %s' % (os.path.join(mrtrix_path, 'fixelfilter'), os.path.join(input_dir, 'fdc'),
-                                                  smoothed_fdc_dir, fixel_fixel_connectivity_dir))        
-        
-    # Map tracks to the fixel template 
-    fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
-    os.system('%s %s %s %s track_density.mif' % (os.path.join(mrtrix_path, 'tck2fixel'), left_and_right_tck,
-                                              fixel_mask, fixel_folder_tracked))
-    track_density_file = os.path.join(fixel_folder_tracked, 'track_density.mif')
-    
-    # Threshold track density
-    track_density_thresholded = os.path.join(fixel_folder_tracked, 'thresh_track_density.mif')
-    os.system('%s -abs %s %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_thresh, track_density_file, track_density_thresholded))
+        # Threshold track density
+        track_density_thresholded = os.path.join(fixel_folder_tracked, 'thresh_track_density.mif')
+        os.system('%s -abs %s %s %s' % (os.path.join(mrtrix_path, 'mrthreshold'), track_density_thresh, track_density_file, track_density_thresholded))
 
+    # If processed input is true, use masks directly instead of processing
+    if input_is_processed == True:
+        if not left_track == 'NA':
+            track_density_thresholded_raw = left_track
+        if not right_track == 'NA':
+            track_density_thresholded_raw = right_track
+        if left_track == 'NA' and right_track == 'NA':
+            raise RuntimeError('Combining volumetric masks when input_is_processed is true is not implemented yet. Input one mask instead.')
+        fixel_folder_tracked = os.path.join(tractography_folder, 'fixel_folder_tracked')
+        track_density_thresholded = os.path.join(fixel_folder_tracked, 'track_density_thresholded_from_vol.mif')
+        os.system('%s %s %s %s track_density_thresholded_from_vol.mif' % (os.path.join(mrtrix_path, 'voxel2fixel'), track_density_thresholded_raw, fixel_mask, fixel_folder_tracked))
+            
     # Create the output folder if it doesn't exist 
     if not os.path.exists(output_folder_path):
         os.system('mkdir %s' % output_folder_path)
